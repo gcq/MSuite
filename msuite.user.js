@@ -1,24 +1,24 @@
 ﻿// ==UserScript==
 // @name        Moodle Suite
 // @namespace   http://userscripts.org/users/392674
-// @description Suite IDK
+// @description Suite per al Moodle
 // @include     *://noumoodle.bernatelferrer.cat/*
 // @include     *://192.168.0.9/*
 // @require     http://code.jquery.com/jquery-2.0.3.min.js
-// @version     0.0.1
+// @version     0.1.2
 // @grant       none
 // ==/UserScript==
 
 /*//Boilerplate for jQuery - start
 //Code from http://snipplr.com/view/54863/wait-for-jquery-to-load/
 var checker = 0;
- 
+
 function jqueryLoaded() {
     clearInterval(checker);
     //alert('jQuery is loaded, sire!');
     main();
 }
- 
+
 function checkJquery() {
     if (window.jQuery) {
         jqueryLoaded();
@@ -33,7 +33,7 @@ function checkJquery() {
         checker = window.setInterval(checkJquery, 100);
     }
 }
- 
+
 checkJquery();
 //Boilerplate for jQuery - end*/
 
@@ -260,7 +260,10 @@ var timetable = function() {
 
 var folders = function() {
     function tagThings() {
-        $("img[alt='Carpeta']").closest(".activityinstance").addClass("custom_folder");
+        $("img[src='http://noumoodle.bernatelferrer.cat/theme/image.php/aardvark_postit/folder/1394633671/icon']")
+        .closest(".activityinstance").addClass("custom_folder");
+        $("img[src='http://192.168.0.9/theme/image.php/aardvark_postit/folder/1394633671/icon']")
+        .closest(".activityinstance").addClass("custom_folder");
     }
 
     function addGUI() {
@@ -311,8 +314,12 @@ var activity_checker = function() {
     var checked = false;
 
     function tagThings() {
-        $("img[alt='Tasca']").closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
-        $("img[alt='Tasca (2.2)']").closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_2");
+        $("img[src='http://noumoodle.bernatelferrer.cat/theme/image.php/aardvark_postit/assign/1394633671/icon']")
+        .closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
+        $("img[src='http://192.168.0.9/theme/image.php/aardvark_postit/assign/1394633671/icon']")
+        .closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
+        
+        //$("img[alt='Tasca (2.2)']").closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_2");
     }
 
     function addCSS() {
@@ -659,10 +666,12 @@ function main() {
     var url = window.location.href;
 
     if (/.*:\/\/noumoodle\.bernatelferrer\.cat\/.*/.test(url) || /.*:\/\/192\.168\.0\.9\/.*/.test(url)) {
+        console.log("timetable");
         timetable();
     }
 
     if (/.*:\/\/noumoodle\.bernatelferrer\.cat\/course\/.*/.test(url) || /.*:\/\/192\.168\.0\.9\/course\/.*/.test(url)) {
+        console.log("course");
         activity_checker();
         folders();
     }
