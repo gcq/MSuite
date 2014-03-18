@@ -5,20 +5,20 @@
 // @include     *://noumoodle.bernatelferrer.cat/*
 // @include     *://192.168.0.9/*
 // @require     http://code.jquery.com/jquery-2.0.3.min.js
-// @version     0.1.2
+// @version     0.1.5
 // @grant       none
 // ==/UserScript==
 
 /*//Boilerplate for jQuery - start
 //Code from http://snipplr.com/view/54863/wait-for-jquery-to-load/
 var checker = 0;
-
+ 
 function jqueryLoaded() {
     clearInterval(checker);
     //alert('jQuery is loaded, sire!');
     main();
 }
-
+ 
 function checkJquery() {
     if (window.jQuery) {
         jqueryLoaded();
@@ -33,7 +33,7 @@ function checkJquery() {
         checker = window.setInterval(checkJquery, 100);
     }
 }
-
+ 
 checkJquery();
 //Boilerplate for jQuery - end*/
 
@@ -260,16 +260,17 @@ var timetable = function() {
 
 var folders = function() {
     function tagThings() {
-        $("img[src='http://noumoodle.bernatelferrer.cat/theme/image.php/aardvark_postit/folder/1394633671/icon']")
-        .closest(".activityinstance").addClass("custom_folder");
-        $("img[src='http://192.168.0.9/theme/image.php/aardvark_postit/folder/1394633671/icon']")
-        .closest(".activityinstance").addClass("custom_folder");
+        $(".accesshide:contains('Carpeta')").closest(".activityinstance").addClass("custom_folder");
+    }
+
+    function addCSS() {
+        $("<style>").text(".custom_folder {margin-left:-15px;display:table;}").appendTo("head");
     }
 
     function addGUI() {
         //Carpetes
         $(".custom_folder").closest(".activity").append($("<div class='tree_container'></div>").hide());
-        $(".custom_folder").prepend($("<span class='moar_btn'>+ </span>"));
+        $(".custom_folder").prepend($("<span class='moar_btn' style='display:table-cell;vertical-align:middle;'><a style='margin-right:5px; href=javascript:void(0)><img alt='+' src='http://www.irisana.com/img/plus-icon.gif'></img></a></span>"));
     }
 
     function main() {
@@ -277,6 +278,7 @@ var folders = function() {
             console.log("Initializing moodle folders");
             
             tagThings();
+            addCSS();
             addGUI();
             
             $(".moar_btn").click(function () { //Carpetes
@@ -314,15 +316,16 @@ var activity_checker = function() {
     var checked = false;
 
     function tagThings() {
-        $("img[src='http://noumoodle.bernatelferrer.cat/theme/image.php/aardvark_postit/assign/1394633671/icon']")
-        .closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
-        $("img[src='http://192.168.0.9/theme/image.php/aardvark_postit/assign/1394633671/icon']")
-        .closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
-        
-        //$("img[alt='Tasca (2.2)']").closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_2");
+        $(".accesshide:contains('Tasca')").closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
+        $(".accesshide:contains('Tasca (2.2)')").closest(".activityinstance").removeClass("custom_activity_1").addClass("custom_activity_2");
+
+        //El link de la entrega tindra aquesta classe
+        $(".custom_activity").find("a").addClass("instance_url")
+
+        $(".custom_activity").find(".activityicon").addClass("single_check");
     }
 
-    function addCSS() {
+    function addCSS() {                                            
         $("<style>").text(".activity_done {background-color:#80FF80}").appendTo("head");
         $("<style>").text(".activity_passed {background-color:#FF9999}").appendTo("head");
         $("<style>").text(".activity_pending {background-color:#FFFF00}").appendTo("head");
@@ -330,18 +333,29 @@ var activity_checker = function() {
     }
 
     function addGUI() {
-        //Comprovar activitats
-        $(".yui3-menuitem").closest("ul").append($("<li class='yui3-menuitem'><a class='yui3-menuitem-content' id='check_button'>Comprovar activitats</a></li>"));
+        //Comprovar totes les activitats
+        $(".yui3-menuitem").closest("ul").append($("<li class='yui3-menuitem'><a class='yui3-menuitem-content' id='check_button' title='Comprova totes les activitats del curs' >Comprovar activitats</a></li>"));
         
         //Comprovar activitats d'una secció només
         waitForKeyElements(".yui3-tab-panel", function(node) {
-            node.prepend($("<div style='text-align:right;float:right;margin:2px;padding:5px;'><a href='javascript:void(0)'><span class='tab_check' style='margin:2px;padding:5px;background-color:#2775c4;border:solid 2px;border-color:#043667;border-radius:5px;color: white;'>Comprovar</span></a></div>"));
+            node.prepend($("<div style='text-align:right;float:right;margin:2px;padding:5px;'><a title='Comprova només aquesta pestanya' href='javascript:void(0)'><span class='tab_check' style='margin:2px;padding:5px;background-color:#2775c4;border:solid 2px;border-color:#043667;border-radius:5px;color: white;'>Comprovar</span></a></div>"));
+            
+            //Necessita estar qui, per que quan s'executa main, aixo encara no existeix.
             node.find(".tab_check").click(function () {
                 total = 0;
                 count = 0;
                 populateSection($(this).closest(".yui3-tab-panel"));
             });
         });
+        
+        //Per que el clic a la imatge de la activitat no tingui cap efecte
+        $(".single_check").each(function () {
+            $(this).prependTo($(this).parent().parent());
+            $(this).wrap("<a title='Comprova aquesta activitat' href='javascript:void(0)'></a>");
+        });
+
+        $(".custom_activity").append($("<a class='sub_btn' style='margin-left:10px;' title='Més informació sobre la tramesa' href='javascript:void(0)'>[info]</a>").hide());
+        $(".custom_activity").after($("<div class='sub_container'></div>").hide());
         
         //Percentatge
         $("#page").before($("<div align='center' style='width:100%;position:fixed;z-index:999;'><div id='progress_aligner' align='left'><div id='progress_container' style='display:none;'><div id='progress' align='center' style='height:15px;background-color:#1ee713;border:solid 2px;border-color:#17a30f;width:0%;'><span id='progress_display'>0%</span></div></div></div>"));
@@ -355,7 +369,8 @@ var activity_checker = function() {
             console.log("checking activity");
             
             if (custom_activity_node.hasClass("custom_activity_1")) {
-                $.get(custom_activity_node.find("a").prop("href")).done(function (data) {
+                console.log("lol");
+                $.get(custom_activity_node.find(".instance_url").prop("href")).done(function (data) {
                     count += 1;
                     updateProgress();
                     var page = $($.trim(data));
@@ -366,16 +381,11 @@ var activity_checker = function() {
                         } else {
                             custom_activity_node.addClass("activity_done");
                             if (page.find(".feedbacktable").length > 0) {
-                                var cont = $("<div class='sub_container'></div>").hide();
-                                cont.append(page.find(".feedbacktable"));
-                                custom_activity_node.after(cont);
-                                
-                                //Button
-                                custom_activity_node.append($("<span class='sub_btn'> [comentari]</span>"));
-                                $(".sub_btn").unbind("click").click(function () {
-                                    console.log("clicked submission moar");
-                                    $(this).parent().parent().find(".sub_container").slideToggle();
-                                });
+                                //Omplim el div amb la info
+                                custom_activity_node.parent().find(".sub_container").append(page.find(".feedbacktable"));
+
+                                //Mostrem el botó de 
+                                custom_activity_node.find(".sub_btn").show();
                             }
                         }
                     } else {
@@ -384,13 +394,13 @@ var activity_checker = function() {
                         } else {
                             custom_activity_node.addClass("activity_pending");
                             var remaining = page.find(".lastrow").find(".lastcol").text();
-                            custom_activity_node.append($("<span>").text(" [Temps restant: " + remaining + " ]"));
+                            custom_activity_node.append($("<span style='margin-left:10px;'></span>").text("[Temps restant: " + remaining + " ]"));
                         }
                     }
                 });
             }
-            
-            if (custom_activity_node.hasClass("custom_activity_2")) {
+
+        if (custom_activity_node.hasClass("custom_activity_2")) {
                 $.get(custom_activity_node.find("a").prop("href")).done(function (data) {
                     count += 1;
                     updateProgress();
@@ -585,6 +595,15 @@ var activity_checker = function() {
             
             $("#check_button").click(function () { //Tasques
                 checkAllActivities();
+            });
+            
+            $(".single_check").click(function () {
+                populateActivity($(this).closest(".custom_activity"));
+            });
+
+            $(".sub_btn").click(function () {
+                console.log("clicked submission moar");
+                $(this).parent().parent().find(".sub_container").slideToggle();
             });
             
             console.log("Activity checker ok");
