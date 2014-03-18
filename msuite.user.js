@@ -13,13 +13,13 @@
 //Code from http://snipplr.com/view/54863/wait-for-jquery-to-load/
 var checker = 0;
  
-function jqueryLoaded() {
+function jqueryLoaded () {
     clearInterval(checker);
     //alert('jQuery is loaded, sire!');
     main();
 }
  
-function checkJquery() {
+function checkJquery () {
     if (window.jQuery) {
         jqueryLoaded();
     }
@@ -37,7 +37,7 @@ function checkJquery() {
 checkJquery();
 //Boilerplate for jQuery - end*/
 
-var timetable = function() {
+var timetable = function () {
     // - - - VARIABLES - - - //
 
     //Es pot espandir, només cal tenir en compte de mantenir la estructura com ara.
@@ -133,12 +133,12 @@ var timetable = function() {
         }
     }
 
-    function addCSS() {
+    function addCSS () {
         //Per la classe highlighted
         $("<style>").text("#timetable_table tr>td.current_class{background-color:#8AE62E; border: 3px solid green};").appendTo("head");
     }
 
-    function addGUI() {
+    function addGUI () {
         //Boté a la barra superior del moodle
         $(".yui3-menuitem").closest("ul").append($("<li class='yui3-menuitem'><a class='yui3-menuitem-content' id='timetable_button'>Horari</a></li>"));
         
@@ -186,7 +186,7 @@ var timetable = function() {
         }
     }
 
-    function always2(i) {
+    function always2 (i) {
         i = i.toString();
         if (i.length < 2) {
             i = "0"+i;
@@ -194,7 +194,7 @@ var timetable = function() {
         return i;
     }
 
-    function updateTable() {
+    function updateTable () {
         //Busquem quina hora és
         //current será l'index de l'array hores
         var date = new Date(), i, hora, hora1, hora2, current = -1;
@@ -228,7 +228,7 @@ var timetable = function() {
         
     }
 
-    function main() {
+    function main () {
         $(document).ready(function () {
             console.log("Initializing timetable");
 
@@ -251,29 +251,28 @@ var timetable = function() {
             setInterval(updateTable, 1000);
             
             console.log("Timetable ok");
-        
         });
     }
 
     main();
 };
 
-var folders = function() {
-    function tagThings() {
+var folders = function () {
+    function tagThings () {
         $(".accesshide:contains('Carpeta')").closest(".activityinstance").addClass("custom_folder");
     }
 
-    function addCSS() {
+    function addCSS () {
         $("<style>").text(".custom_folder {margin-left:-15px;display:table;}").appendTo("head");
     }
 
-    function addGUI() {
+    function addGUI () {
         //Carpetes
         $(".custom_folder").closest(".activity").append($("<div class='tree_container'></div>").hide());
         $(".custom_folder").prepend($("<span class='moar_btn' style='display:table-cell;vertical-align:middle;'><a style='margin-right:5px;'' href=javascript:void(0)><img alt='+' src='http://www.irisana.com/img/plus-icon.gif'></img></a></span>"));
     }
 
-    function main() {
+    function main () {
         $(document).ready(function () {
             console.log("Initializing moodle folders");
             
@@ -300,19 +299,18 @@ var folders = function() {
             });
             
             console.log("Folders ok");
-        
         });
     }
 
     main();
 };
 
-var activity_checker = function() {
+var activity_checker = function () {
     var total = 0;
     var count = 0;
     var checked = false;
 
-    function tagThings() {
+    function tagThings () {
         $(".accesshide:contains('Tasca')").closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
         $(".accesshide:contains('Tasca (2.2)')").closest(".activityinstance").removeClass("custom_activity_1").addClass("custom_activity_2");
 
@@ -322,19 +320,19 @@ var activity_checker = function() {
         $(".custom_activity").find(".activityicon").addClass("single_check");
     }
 
-    function addCSS() {                                            
+    function addCSS () {
         $("<style>").text(".activity_done {background-color:#80FF80}").appendTo("head");
         $("<style>").text(".activity_passed {background-color:#FF9999}").appendTo("head");
         $("<style>").text(".activity_pending {background-color:#FFFF00}").appendTo("head");
         $("<style>").text(".activity_unknown {background-color:#C0C0C0}").appendTo("head");
     }
 
-    function addGUI() {
+    function addGUI () {
         //Comprovar totes les activitats
         $(".yui3-menuitem").closest("ul").append($("<li class='yui3-menuitem'><a class='yui3-menuitem-content' id='check_button' title='Comprova totes les activitats del curs' >Comprovar activitats</a></li>"));
         
         //Comprovar activitats d'una secció només
-        waitForKeyElements(".yui3-tab-panel", function(node) {
+        waitForKeyElements(".yui3-tab-panel", function (node) {
             node.prepend($("<div style='text-align:right;float:right;margin:2px;padding:5px;'><a title='Comprova només aquesta pestanya' href='javascript:void(0)'><span class='tab_check' style='margin:2px;padding:5px;background-color:#2775c4;border:solid 2px;border-color:#043667;border-radius:5px;color: white;'>Comprovar</span></a></div>"));
             
             //Necessita estar qui, per que quan s'executa main, aixo encara no existeix.
@@ -359,7 +357,7 @@ var activity_checker = function() {
         $("#progress_aligner").width($("#menuwrap").width());
     }
 
-    function populateActivity(custom_activity_node) {
+    function populateActivity (custom_activity_node) {
         custom_activity_node = $(custom_activity_node);
         
         if (custom_activity_node.hasClass("custom_activity")) {
@@ -425,18 +423,18 @@ var activity_checker = function() {
         }
     }
 
-    function populateSection(section_node) {
+    function populateSection (section_node) {
         console.log("checking section");
         
         var section = $(section_node);
         
-        $.each(section.find(".custom_activity"), function(a, b) {
+        $.each(section.find(".custom_activity"), function (a, b) {
             populateActivity(b);
             total += 1;
         });
     }
 
-    function populateTab(tab_node) {
+    function populateTab (tab_node) {
         console.log("checking tab");
         var tab_position = $(tab_node).prevAll().length;
         var section = $("[id*='section-']")[tab_position];
@@ -444,7 +442,7 @@ var activity_checker = function() {
         populateSection(section);
     }
 
-    function updateProgress() {
+    function updateProgress () {
         var percent = (count / total) * 100;
         
         if (percent > 0 && percent < 100) {
@@ -457,7 +455,7 @@ var activity_checker = function() {
         }
     }
 
-    function checkAllActivities() {
+    function checkAllActivities () {
         if (checked === true) {
             alert("Ja comprovat!");
         } else {
@@ -468,20 +466,20 @@ var activity_checker = function() {
             if (tabs.length >= 1) {
                 total = 0;
                 count = 0;
-                $.each(tabs, function(a, b) {
+                $.each(tabs, function (a, b) {
                     populateTab(b);
                 });
             } else {
                 count = 0;
                 total = $(".custom_activity").length;
-                $.each($(".custom_activity"), function(a, b) {
+                $.each($(".custom_activity"), function (a, b) {
                     populateActivity(b);
                 });
             }
         }
     }
 
-    /*--- waitForKeyElements():  A utility function, for Greasemonkey scripts,
+    /*--- waitForKeyElements(): A utility function, for Greasemonkey scripts,
         that detects and handles AJAXed content.
 
         Usage example:
@@ -492,7 +490,7 @@ var activity_checker = function() {
             );
 
             //--- Page-specific function to do what we want when the node is found.
-            function commentCallbackFunction (jNode) {
+            function commentCallbackfunction (jNode) {
                 jNode.text ("This comment changed by waitForKeyElements().");
             }
 
@@ -517,66 +515,58 @@ var activity_checker = function() {
         var targetNodes, btargetsFound;
 
         if (typeof iframeSelector == "undefined") {
-            targetNodes     = $(selectorTxt);
+            targetNodes = $(selectorTxt);
         } else {
-            targetNodes     = $(iframeSelector).contents ()
-                                               .find (selectorTxt);
+            targetNodes = $(iframeSelector).contents().find(selectorTxt);
         }
 
-        if (targetNodes  &&  targetNodes.length > 0) {
-            btargetsFound   = true;
-            /*--- Found target node(s).  Go through each and act if they
+        if (targetNodes && targetNodes.length > 0) {
+            btargetsFound = true;
+            /*--- Found target node(s). Go through each and act if they
                 are new.
             */
-            targetNodes.each ( function () {
-                var jThis        = $(this);
-                var alreadyFound = jThis.data ('alreadyFound')  ||  false;
+            targetNodes.each(function () {
+                var jThis = $(this);
+                var alreadyFound = jThis.data('alreadyFound') || false;
 
                 if (!alreadyFound) {
                     //--- Call the payload function.
-                    var cancelFound     = actionFunction (jThis);
+                    var cancelFound = actionFunction (jThis);
                     if (cancelFound) {
-                        btargetsFound   = false;
-                    } else{
-                        jThis.data ('alreadyFound', true);
+                        btargetsFound = false;
+                    } else {
+                        jThis.data('alreadyFound', true);
                     }
                 }
-            } );
-        }
-        else {
-            btargetsFound   = false;
+            });
+        } else {
+            btargetsFound = false;
         }
 
         //--- Get the timer-control variable for this selector.
-        var controlObj      = waitForKeyElements.controlObj  ||  {};
-        var controlKey      = selectorTxt.replace (/[^\w]/g, "_");
-        var timeControl     = controlObj [controlKey];
+        var controlObj = waitForKeyElements.controlObj || {};
+        var controlKey = selectorTxt.replace(/[^\w]/g, "_");
+        var timeControl = controlObj[controlKey];
 
         //--- Now set or clear the timer as appropriate.
-        if (btargetsFound  &&  bWaitOnce  &&  timeControl) {
+        if (btargetsFound && bWaitOnce && timeControl) {
             //--- The only condition where we need to clear the timer.
-            clearInterval (timeControl);
-            delete controlObj [controlKey];
-        }
-        else {
+            clearInterval(timeControl);
+            delete controlObj[controlKey];
+        } else {
             //--- Set a timer, if needed.
-            if ( ! timeControl) {
-                timeControl = setInterval ( function () {
-                        waitForKeyElements (    selectorTxt,
-                                                actionFunction,
-                                                bWaitOnce,
-                                                iframeSelector
-                                            );
-                    },
-                    300
-                );
-                controlObj [controlKey] = timeControl;
+            if (!timeControl) {
+                timeControl = setInterval(function () {
+                    waitForKeyElements(selectorTxt, actionFunction, bWaitOnce, iframeSelector);
+                }, 300);
+                
+                controlObj[controlKey] = timeControl;
             }
         }
-        waitForKeyElements.controlObj   = controlObj;
+        waitForKeyElements.controlObj = controlObj;
     }
     
-    function main() {
+    function main () {
         $(document).ready(function () {
             console.log("Initializing Activity checker");
             
@@ -584,7 +574,7 @@ var activity_checker = function() {
             addCSS();
             addGUI();
             
-            $("#check_button").click(function () { //Tasques
+            $("#check_button").click(function () {
                 checkAllActivities();
             });
             
@@ -608,13 +598,13 @@ var activity_checker = function() {
     main();
 };
 
-var easter_eggs = function() {
-    var valentines = function() {
+var easter_eggs = function () {
+    var valentines = function () {
         var s=document.createElement('style');
         s.innerHTML = "@keyframes hearts {to {font-size:0;}}";
         document.getElementsByTagName('head')[0].appendChild(s);
         
-        function heart(x, y, size) {
+        function heart (x, y, size) {
             var e = document.createElement("div");
             e.innerHTML = "?";
             e.style.fontSize = (size) + "px";
@@ -623,16 +613,16 @@ var easter_eggs = function() {
             e.style.top = (y)+"px";
             e.style.left = (x)+"px";
             e.style.marginTop = "0px";
-            e.addEventListener("animationend", function(){e.remove();});
+            e.addEventListener("animationend", function () {e.remove();});
             document.body.appendChild(e);
             e.style.MozAnimation = "hearts 3s";
         }
-        function randomHeart() {heart(Math.random()*window.screen.width,Math.random()*window.screen.height, 70);}
+        function randomHeart () {heart(Math.random()*window.screen.width,Math.random()*window.screen.height, 70);}
         randomHeart();
         setInterval(randomHeart, 2000);
         
         var count=0;
-        function trail(e) {
+        function trail (e) {
             if (count > 5) {
                 count = 0;
                 heart(e.clientX, e.clientY, 20);
@@ -643,8 +633,8 @@ var easter_eggs = function() {
         }
         window.addEventListener("mousemove", trail);
     };
-    var catalonia = function() {
-        function flag(x, y, h, w) {
+    var catalonia = function () {
+        function flag (x, y, h, w) {
             var e = document.createElement("img");
             e.src = "//upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Catalonia.svg/200px-Flag_of_Catalonia.svg.png";
             e.style.position = "fixed";
@@ -670,7 +660,7 @@ var easter_eggs = function() {
     if (day == 11 && month == 9) {catalonia();}  //diada de catalunya
 };
 
-function main() {
+function main () {
     easter_eggs();
 
     var url = window.location.href;
