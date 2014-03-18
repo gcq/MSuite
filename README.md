@@ -1,4 +1,4 @@
-__[Instal·lació recomenada](github.com/gcq/MSuite/raw/master/msuite.user.js)__
+__[Instal·lació recomenada](//github.com/gcq/MSuite/raw/master/msuite.user.js)__
 
 ###Activity Checker:
 
