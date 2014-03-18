@@ -270,7 +270,7 @@ var folders = function() {
     function addGUI() {
         //Carpetes
         $(".custom_folder").closest(".activity").append($("<div class='tree_container'></div>").hide());
-        $(".custom_folder").prepend($("<span class='moar_btn' style='display:table-cell;vertical-align:middle;'><a style='margin-right:5px; href=javascript:void(0)><img alt='+' src='http://www.irisana.com/img/plus-icon.gif'></img></a></span>"));
+        $(".custom_folder").prepend($("<span class='moar_btn' style='display:table-cell;vertical-align:middle;'><a style='margin-right:5px;'' href=javascript:void(0)><img alt='+' src='http://www.irisana.com/img/plus-icon.gif'></img></a></span>"));
     }
 
     function main() {
@@ -298,9 +298,6 @@ var folders = function() {
                     tree.slideToggle();
                 }
             });
-            
-            // Va automáticament a la última pestanya
-            $(".yui3-tabview-list").find("li").last().click();
             
             console.log("Folders ok");
         
@@ -369,7 +366,6 @@ var activity_checker = function() {
             console.log("checking activity");
             
             if (custom_activity_node.hasClass("custom_activity_1")) {
-                console.log("lol");
                 $.get(custom_activity_node.find(".instance_url").prop("href")).done(function (data) {
                     count += 1;
                     updateProgress();
@@ -384,7 +380,7 @@ var activity_checker = function() {
                                 //Omplim el div amb la info
                                 custom_activity_node.parent().find(".sub_container").append(page.find(".feedbacktable"));
 
-                                //Mostrem el botó de 
+                                //Mostrem el botó de més info. EZ
                                 custom_activity_node.find(".sub_btn").show();
                             }
                         }
@@ -400,8 +396,8 @@ var activity_checker = function() {
                 });
             }
 
-        if (custom_activity_node.hasClass("custom_activity_2")) {
-                $.get(custom_activity_node.find("a").prop("href")).done(function (data) {
+            if (custom_activity_node.hasClass("custom_activity_2")) {
+                $.get(custom_activity_node.find(".instance_url").prop("href")).done(function (data) {
                     count += 1;
                     updateProgress();
                     var page = $($.trim(data));
@@ -409,22 +405,17 @@ var activity_checker = function() {
                     if (page.find(".files").find("a").length > 0) {
                         custom_activity_node.addClass("activity_done");
                         if (page.find(".feedback").length > 0) {
-                            var cont = $("<div class='sub_container'></div>").hide();
-                            cont.append(page.find(".feedback"));
-                            custom_activity_node.after(cont);
-                            
-                            //Button
-                            custom_activity_node.append($("<span class='sub_btn'> [comentari]</span>"));
-                            $(".sub_btn").unbind("click").click(function () {
-                                console.log("clicked submission moar");
-                                $(this).parent().parent().find(".sub_container").slideToggle();
-                            });
+                            //Omplim el div amb la info
+                            custom_activity_node.parent().find(".sub_container").append(page.find(".feedbacktable"));
+
+                            //Mostrem el botó de més info. EZ
+                            custom_activity_node.find(".sub_btn").show();
                         }
                     } else {
                         custom_activity_node.addClass("activity_pending");
                         var date = page.find(".c1").eq(1).text();
                         if (date !== "") {
-                            custom_activity_node.append($("<span>").text(" [Data d'entrega: " + date + " ]"));
+                            custom_activity_node.append($("<span style='margin-left:10px;'></span>").text("[Data d'entrega: " + date + " ]"));
                         }
                     }
                 });
