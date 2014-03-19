@@ -269,7 +269,7 @@ var folders = function () {
     function addGUI () {
         //Carpetes
         $(".custom_folder").closest(".activity").append($("<div class='tree_container'></div>").hide());
-        $(".custom_folder").prepend($("<span class='moar_btn' style='display:table-cell;vertical-align:middle;'><a style='margin-right:5px;'' href=javascript:void(0)><img alt='+' src='http://www.irisana.com/img/plus-icon.gif'></img></a></span>"));
+        $(".custom_folder").prepend($("<span class='moar_btn' style='display:table-cell;vertical-align:middle;'><a style='margin-right:5px;'' href=javascript:void(0)><img alt='+' src='data:image/gif;base64,R0lGODlhCwALAKEBAICAgP///wAAAP///yH5BAEKAAMALAAAAAALAAsAAAIajI8Gy6z5AjjiTEntE5zjH1TRFWogcjUqBBUAOw=='></img></a></span>"));
     }
 
     function main () {
@@ -282,9 +282,11 @@ var folders = function () {
             
             $(".moar_btn").click(function () { //Carpetes
                 console.log("clicked folder");
-                var container = $(this).closest(".custom_folder");
-                var dir = container.children("a").prop("href");
-                var tree = container.closest(".activity").children(".tree_container");
+                
+                var
+                container = $(this).closest(".custom_folder"),
+                dir = container.children("a").prop("href"),
+                tree = container.closest(".activity").children(".tree_container");
                 
                 if (tree.is(":empty")) {
                     tree.text("Loading...").slideToggle();
@@ -359,6 +361,11 @@ var activity_checker = function () {
 
     function populateActivity (custom_activity_node) {
         custom_activity_node = $(custom_activity_node);
+
+        var  //Aha! Look at me!
+        sub_container = custom_activity_node.parent().find(".sub_container"),
+        sub_btn = custom_activity_node.find(".sub_btn"),
+        instance_url = custom_activity_node.find(".instance_url").prop("href");
         
         if (custom_activity_node.hasClass("custom_activity")) {
             console.log("checking activity");
@@ -371,16 +378,16 @@ var activity_checker = function () {
             .removeClass("activity_unknown");
 
             //Amaguem el botó de més info
-            custom_activity_node.find(".sub_btn").hide();
+            sub_btn.hide();
 
             //Buidem la info
-            custom_activity_node.parent().find(".sub_container").slideUp().empty();
+            sub_container.slideUp().empty();
 
             //Afegim un link per anar a la tramesa completa (Useless)
-            custom_activity_node.parent().find(".sub_container").append($("<a href='" + custom_activity_node.find(".instance_url").prop("href") + "' style='font-weight:bolder;;'>Anar a la tramesa completa</a>"));
+            sub_container.append($("<a target='_blank' href='" + instance_url + "' style='font-weight:bolder;'>Anar a la tramesa completa <img src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIgogICB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgdmVyc2lvbj0iMS4xIgogICB3aWR0aD0iMTAiCiAgIGhlaWdodD0iMTAiCiAgIGlkPSJzdmcyIj4KICA8bWV0YWRhdGEKICAgICBpZD0ibWV0YWRhdGE3Ij4KICAgIDxyZGY6UkRGPgogICAgICA8Y2M6V29yawogICAgICAgICByZGY6YWJvdXQ9IiI+CiAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9zdmcreG1sPC9kYzpmb3JtYXQ+CiAgICAgICAgPGRjOnR5cGUKICAgICAgICAgICByZGY6cmVzb3VyY2U9Imh0dHA6Ly9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIiAvPgogICAgICAgIDxkYzp0aXRsZT48L2RjOnRpdGxlPgogICAgICA8L2NjOldvcms+CiAgICA8L3JkZjpSREY+CiAgPC9tZXRhZGF0YT4KICA8ZwogICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC04MjYuNDI4NTksLTY5OC43OTA3NykiCiAgICAgaWQ9ImxheWVyMSI+CiAgICA8cmVjdAogICAgICAgd2lkdGg9IjUuOTgyMTQyOSIKICAgICAgIGhlaWdodD0iNS45ODIxNDI5IgogICAgICAgeD0iODI2LjkyODU5IgogICAgICAgeT0iNzAyLjMwODY1IgogICAgICAgaWQ9InJlY3QyOTk2IgogICAgICAgc3R5bGU9ImZpbGw6I2ZmZmZmZjtmaWxsLW9wYWNpdHk6MTtzdHJva2U6IzAwNjZjYztzdHJva2Utd2lkdGg6MXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjEiIC8+CiAgICA8ZwogICAgICAgdHJhbnNmb3JtPSJtYXRyaXgoMC43MDcxMDY3OCwwLjcwNzEwNjc4LC0wLjcwNzEwNjc4LDAuNzA3MTA2NzgsNzYyLjg3LC0zNTkuODgzMzkpIgogICAgICAgaWQ9Imc0ODE1Ij4KICAgICAgPHBhdGgKICAgICAgICAgZD0ibSA3OTYuOTA4MTksNzAwLjI4MzE3IDMuNzAxMjcsLTMuNzAxMjYgMy44MTE3NCwzLjgxMTc1IC0wLjAxODksMi4yMDMzNiAtMS44NTIzNCwwIDAsMy44NTQzIC0zLjgwMjMzLDAgMCwtMy45NzEwOCAtMS44NTM2LDAgeiIKICAgICAgICAgaWQ9InBhdGg0Nzc3IgogICAgICAgICBzdHlsZT0iZmlsbDojMDA2NmZmO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTpub25lIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJtIDgwMC42MDk0Niw2OTguMDAyNDQgMy40Njk4NiwzLjQzODY1IC0yLjU3MDIsMCAwLDQuMDc0MzYgLTEuNzM2MiwwIDAsLTQuMDc0MzYgLTIuNjE3NTQsLTMuNmUtNCB6IgogICAgICAgICBpZD0icGF0aDQ3NzkiCiAgICAgICAgIHN0eWxlPSJmaWxsOiNmZmZmZmY7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOm5vbmUiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K'></img></a>"));
             
             if (custom_activity_node.hasClass("custom_activity_1")) {
-                $.get(custom_activity_node.find(".instance_url").prop("href")).done(function (data) {
+                $.get(instance_url).done(function (data) {
                     count += 1;
                     updateProgress();
                     var page = $($.trim(data));
@@ -392,10 +399,10 @@ var activity_checker = function () {
                             custom_activity_node.addClass("activity_done");
                             if (page.find(".feedbacktable").length > 0) {
                                 //Omplim el div amb la info
-                                custom_activity_node.parent().find(".sub_container").prepend(page.find(".feedbacktable"));
+                                sub_container.prepend(page.find(".feedbacktable"));
 
                                 //Mostrem el botó de més info. EZ
-                                custom_activity_node.find(".sub_btn").show();
+                                sub_btn.show();
                             }
                         }
                     } else {
@@ -411,7 +418,7 @@ var activity_checker = function () {
             }
 
             if (custom_activity_node.hasClass("custom_activity_2")) {
-                $.get(custom_activity_node.find(".instance_url").prop("href")).done(function (data) {
+                $.get(instance_url).done(function (data) {
                     count += 1;
                     updateProgress();
                     var page = $($.trim(data));
@@ -420,10 +427,10 @@ var activity_checker = function () {
                         custom_activity_node.addClass("activity_done");
                         if (page.find(".feedback").length > 0) {
                             //Omplim el div amb la info
-                            custom_activity_node.parent().find(".sub_container").prepend(page.find(".feedbacktable"));
+                            sub_container.prepend(page.find(".feedbacktable"));
 
                             //Mostrem el botó de més info. EZ
-                            custom_activity_node.find(".sub_btn").show();
+                            sub_btn.show();
                         }
                     } else {
                         custom_activity_node.addClass("activity_pending");
@@ -470,12 +477,13 @@ var activity_checker = function () {
         if (percent_dot > 0) {
             percent_str = percent_str.slice(0, percent_dot);
         }
+        percent_str = percent_str + "%";
         
         if (percent > 0 && percent < 100) {
             console.log("update progress:", percent);
             $("#progress_container").show();
-            $("#progress").css("width", percent + "%");
-            $("#progress_display").text(percent_str + "%");
+            $("#progress").css("width", percent_str);
+            $("#progress_display").text(percent_str);
         } else {
             $("#progress_container").hide();
         }
