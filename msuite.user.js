@@ -485,20 +485,9 @@ var activity_checker = function () {
             console.log("checking all activities");
             checked = true;
             
-            var tabs = $(".yui3-tab");
-            if (tabs.length >= 1) {
-                total = 0;
-                count = 0;
-                $.each(tabs, function (a, b) {
-                    populateTab(b);
-                });
-            } else {
-                count = 0;
-                total = $(".custom_activity").length;
-                $.each($(".custom_activity"), function (a, b) {
-                    populateActivity(b);
-                });
-            }
+            $.each($(".custom_activity"), function (a, b) {
+                populateActivity(b);
+            });
         }
     }
 
