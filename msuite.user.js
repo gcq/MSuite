@@ -362,6 +362,19 @@ var activity_checker = function () {
         
         if (custom_activity_node.hasClass("custom_activity")) {
             console.log("checking activity");
+
+            //Traiem el color
+            custom_activity_node
+            .removeClass("activity_done")
+            .removeClass("activity_passed")
+            .removeClass("activity_pending")
+            .removeClass("activity_unknown");
+
+            //Amaguem el botó de més info
+            custom_activity_node.find(".sub_btn").hide();
+
+            //Buidem la info
+            custom_activity_node.parent().find(".sub_container").slideUp().empty();
             
             if (custom_activity_node.hasClass("custom_activity_1")) {
                 $.get(custom_activity_node.find(".instance_url").prop("href")).done(function (data) {
