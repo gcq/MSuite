@@ -690,7 +690,6 @@ function main () {
 
     if (/.*:\/\/noumoodle\.bernatelferrer\.cat\/.*/.test(url) || /.*:\/\/192\.168\.0\.9\/.*/.test(url)) {
         console.log("main");
-        config();
         timetable();
     }
 
