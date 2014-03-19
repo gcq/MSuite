@@ -357,6 +357,7 @@ var activity_checker = function () {
         });
 
         $(".custom_activity").append($("<a class='sub_btn' style='margin-left:10px;' title='Més informació sobre la tramesa' href='javascript:void(0)'>[info]</a>").hide());
+        $(".custom_activity").append($("<span class='quick_info' style='margin-left:10px;'></span>"));
         $(".custom_activity").after($("<div class='sub_container' style='border-width:10px;border-color:transparent;border-style:solid;'></div>").hide());
         
         //Percentatge
@@ -370,6 +371,7 @@ var activity_checker = function () {
         var  //Aha! Look at me!
         sub_container = custom_activity_node.parent().find(".sub_container"),
         sub_btn = custom_activity_node.find(".sub_btn"),
+        quick_info = custom_activity_node.find(".quick_info"),
         instance_url = custom_activity_node.find(".instance_url").prop("href");
         
         if (custom_activity_node.hasClass("custom_activity")) {
@@ -387,6 +389,7 @@ var activity_checker = function () {
 
             //Buidem la info
             sub_container.slideUp().empty();
+            quick_info.empty();
 
             //Afegim un link per anar a la tramesa completa (Useless)
             sub_container.append($("<a target='_blank' href='" + instance_url + "' style='font-weight:bolder;'>Anar a la tramesa completa <img src='" + external_img_src + "'></img></a>"));
@@ -416,7 +419,7 @@ var activity_checker = function () {
                         } else {
                             custom_activity_node.addClass("activity_pending");
                             var remaining = page.find(".lastrow").find(".lastcol").text();
-                            custom_activity_node.append($("<span style='margin-left:10px;'></span>").text("[Temps restant: " + remaining + " ]"));
+                            quick_info.text("[Temps restant: " + remaining + " ]");
                         }
                     }
                 }
@@ -435,7 +438,7 @@ var activity_checker = function () {
                         custom_activity_node.addClass("activity_pending");
                         var date = page.find(".c1").eq(1).text();
                         if (date !== "") {
-                            custom_activity_node.append($("<span style='margin-left:10px;'></span>").text("[Data d'entrega: " + date + " ]"));
+                            quick_info.text("[Data d'entrega: " + date + " ]");
                         }
                     }
                 }
