@@ -350,7 +350,7 @@ var activity_checker = function () {
         });
 
         $(".custom_activity").append($("<a class='sub_btn' style='margin-left:10px;' title='Més informació sobre la tramesa' href='javascript:void(0)'>[info]</a>").hide());
-        $(".custom_activity").after($("<div class='sub_container'></div>").hide());
+        $(".custom_activity").after($("<div class='sub_container' style='border-width:10px;border-color:transparent;border-style:solid;'></div>").hide());
         
         //Percentatge
         $("#page").before($("<div align='center' style='width:100%;position:fixed;z-index:999;'><div id='progress_aligner' align='left'><div id='progress_container' style='display:none;'><div id='progress' align='center' style='height:15px;background-color:#1ee713;border:solid 2px;border-color:#17a30f;width:0%;'><span id='progress_display'>0%</span></div></div></div>"));
@@ -375,6 +375,9 @@ var activity_checker = function () {
 
             //Buidem la info
             custom_activity_node.parent().find(".sub_container").slideUp().empty();
+
+            //Afegim un link per anar a la tramesa completa (Useless)
+            custom_activity_node.parent().find(".sub_container").append($("<a href='" + custom_activity_node.find(".instance_url").prop("href") + "' style='font-weight:bolder;;'>Anar a la tramesa completa</a>"));
             
             if (custom_activity_node.hasClass("custom_activity_1")) {
                 $.get(custom_activity_node.find(".instance_url").prop("href")).done(function (data) {
@@ -389,7 +392,7 @@ var activity_checker = function () {
                             custom_activity_node.addClass("activity_done");
                             if (page.find(".feedbacktable").length > 0) {
                                 //Omplim el div amb la info
-                                custom_activity_node.parent().find(".sub_container").append(page.find(".feedbacktable"));
+                                custom_activity_node.parent().find(".sub_container").prepend(page.find(".feedbacktable"));
 
                                 //Mostrem el botó de més info. EZ
                                 custom_activity_node.find(".sub_btn").show();
@@ -417,7 +420,7 @@ var activity_checker = function () {
                         custom_activity_node.addClass("activity_done");
                         if (page.find(".feedback").length > 0) {
                             //Omplim el div amb la info
-                            custom_activity_node.parent().find(".sub_container").append(page.find(".feedbacktable"));
+                            custom_activity_node.parent().find(".sub_container").prepend(page.find(".feedbacktable"));
 
                             //Mostrem el botó de més info. EZ
                             custom_activity_node.find(".sub_btn").show();
