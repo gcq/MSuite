@@ -440,11 +440,16 @@ var activity_checker = function () {
         console.log("checking section");
         
         var section = $(section_node);
-        
-        $.each(section.find(".custom_activity"), function (a, b) {
-            populateActivity(b);
-            total += 1;
-        });
+
+        if (section.hasClass("section_checked")) {
+            alert("Ja comprovat! Per tornar a comprovar, recarrega la pàgina");
+        } else {
+            section.addClass("section_checked");
+            $.each(section.find(".custom_activity"), function (a, b) {
+                populateActivity(b);
+                total += 1;
+            });
+        }
     }
 
     function populateTab (tab_node) {
@@ -457,12 +462,17 @@ var activity_checker = function () {
 
     function updateProgress () {
         var percent = (count / total) * 100;
+
+        var percent_str = percent.toString(), percent_dot = percent_str.indexOf(".");
+        if (percent_dot > 0) {
+            percent_str = percent_str.slice(0, percent_dot);
+        }
         
         if (percent > 0 && percent < 100) {
             console.log("update progress:", percent);
             $("#progress_container").show();
             $("#progress").css("width", percent + "%");
-            $("#progress_display").text(percent.toString().slice(0,2) + "%");
+            $("#progress_display").text(percent_str + "%");
         } else {
             $("#progress_container").hide();
         }
