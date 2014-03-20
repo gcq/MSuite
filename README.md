@@ -20,3 +20,7 @@ Es millor ja que és més ràpid que una comprovació completa, i al servidor li
 ###Folders:
 
 + Afegeix un signe `+` davant de cada carpeta, que premet desplegar-la sense obrir una pestanya nova.
+
+###Autoresource
+
++ Es salta les pàgines intermitjes a un recurs com un pdf o una web externa.
