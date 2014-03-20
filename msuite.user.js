@@ -624,6 +624,16 @@ var activity_checker = function () {
     main();
 };
 
+var autotramesa = function () {
+    function main () {
+        if ($(".portfolio-add-link").length === 0 && window.location.hash === "#autotramesa") {
+            $("form").find("input").first().click();
+        }
+    }
+
+    main();
+};
+
 var easter_eggs = function () {
     var valentines = function () {
         var s=document.createElement('style');
@@ -700,6 +710,11 @@ function main () {
         console.log("course");
         activity_checker();
         folders();
+    }
+
+    if (/mod\/assign\/view.php/.test(url)) {
+        console.log("mod assign");
+        autotramesa();
     }
 }
 
