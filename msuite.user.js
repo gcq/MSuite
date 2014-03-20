@@ -322,7 +322,7 @@ var activity_checker = function () {
         $(".accesshide:contains('Tasca (2.2)')").closest(".activityinstance").removeClass("custom_activity_1").addClass("custom_activity_2");
 
         //El link de la entrega tindra aquesta classe
-        $(".custom_activity").find("a").addClass("instance_url")
+        $(".custom_activity").find("a").addClass("instance_url");
 
         $(".custom_activity").find(".activityicon").addClass("single_check");
     }
@@ -372,7 +372,13 @@ var activity_checker = function () {
         sub_container = custom_activity_node.parent().find(".sub_container"),
         sub_btn = custom_activity_node.find(".sub_btn"),
         quick_info = custom_activity_node.find(".quick_info"),
-        instance_url = custom_activity_node.find(".instance_url").prop("href");
+        instance_url = custom_activity_node.find(".instance_url").prop("href"),
+
+        done = function () {custom_activity_node.addClass("activity_done");},
+        pending = function () {custom_activity_node.addClass("activity_pending");},
+        passed = function () {custom_activity_node.addClass("activity_passed");},
+
+        fillSUbContainer = function (node) {sub_container.prepend(node);sub_btn.show();};
         
         if (custom_activity_node.hasClass("custom_activity")) {
             console.log("checking activity");
@@ -402,22 +408,18 @@ var activity_checker = function () {
                 if (custom_activity_node.hasClass("custom_activity_1")) {
                     if (page.find(".submissionstatussubmitted").length > 0) {
                         if (page.find(".plugincontentsummary").length === 0) {
-                            custom_activity_node.addClass("activity_pending");
+                            pending();
                         } else {
-                            custom_activity_node.addClass("activity_done");
+                            done();
                             if (page.find(".feedbacktable").length > 0) {
-                                //Omplim el div amb la info
-                                sub_container.prepend(page.find(".feedbacktable"));
-
-                                //Mostrem el botó de més info. EZ
-                                sub_btn.show();
+                                fillSUbContainer(page.find(".feedbacktable"));
                             }
                         }
                     } else {
                         if (page.find(".overdue").length > 0) {
-                            custom_activity_node.addClass("activity_passed");
+                            passed();
                         } else {
-                            custom_activity_node.addClass("activity_pending");
+                            pending();
                             var remaining = page.find(".lastrow").find(".lastcol").text();
                             quick_info.text("[Temps restant: " + remaining + " ]");
                         }
@@ -426,16 +428,12 @@ var activity_checker = function () {
 
                 if (custom_activity_node.hasClass("custom_activity_2")) {
                     if (page.find(".files").find("a").length > 0) {
-                        custom_activity_node.addClass("activity_done");
+                        done();
                         if (page.find(".feedback").length > 0) {
-                            //Omplim el div amb la info
-                            sub_container.prepend(page.find(".feedbacktable"));
-
-                            //Mostrem el botó de més info. EZ
-                            sub_btn.show();
+                            fillSUbContainer(page.find(".feedbacktable"));
                         }
                     } else {
-                        custom_activity_node.addClass("activity_pending");
+                        pending();
                         var date = page.find(".c1").eq(1).text();
                         if (date !== "") {
                             quick_info.text("[Data d'entrega: " + date + " ]");
