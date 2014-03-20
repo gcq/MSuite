@@ -632,6 +632,20 @@ var autotramesa = function () {
     main();
 };
 
+var autoresource = function () {
+    function main () {
+        if ($(".resourceworkaround").length > 0) {
+            window.location.href = $(".resourceworkaround").find("a").prop("href");
+        }
+
+        if ($(".urlworkaround").length > 0) {
+            window.location.href = $(".urlworkaround").find("a").prop("href");
+        }
+    }
+
+    main();
+};
+
 var easter_eggs = function () {
     var valentines = function () {
         var s=document.createElement('style');
@@ -704,15 +718,20 @@ function main () {
         timetable();
     }
 
-    if (/\/course\/.*/.test(url)) {
+    if (/\/course\//.test(url)) {
         console.log("course");
         activity_checker();
         folders();
     }
 
-    if (/mod\/assign\/view.php/.test(url)) {
+    if (/mod\/assign\//.test(url)) {
         console.log("mod assign");
         autotramesa();
+    }
+
+    if (/mod\/url\//.test(url) || /mod\/resource\//.test(url)) {
+        console.log("resource");
+        autoresource();
     }
 }
 
