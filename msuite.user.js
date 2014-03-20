@@ -357,7 +357,7 @@ var activity_checker = function () {
         });
 
         $(".custom_activity").append($("<a class='sub_btn' style='margin-left:10px;' title='Més informació sobre la tramesa' href='javascript:void(0)'>[info]</a>").hide());
-        $(".custom_activity").append($("<span class='quick_info' style='margin-left:10px;'></span>"));
+        $(".custom_activity").append($("<div class='quick_info' style='margin-left:10px;'></div>"));
         $(".custom_activity").after($("<div class='sub_container' style='border-width:10px;border-color:transparent;border-style:solid;'></div>").hide());
         
         //Percentatge
