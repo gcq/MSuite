@@ -691,12 +691,12 @@ function main () {
 
     var url = window.location.href;
 
-    if (/.*:\/\/noumoodle\.bernatelferrer\.cat\/.*/.test(url) || /.*:\/\/192\.168\.0\.9\/.*/.test(url)) {
+    if (/.*/.test(url)) {  //Silly, pero mantenim l'estil
         console.log("main");
         timetable();
     }
 
-    if (/.*:\/\/noumoodle\.bernatelferrer\.cat\/course\/.*/.test(url) || /.*:\/\/192\.168\.0\.9\/course\/.*/.test(url)) {
+    if (/\/course\/.*/.test(url)) {
         console.log("course");
         activity_checker();
         folders();
