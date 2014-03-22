@@ -907,7 +907,7 @@ var easter_eggs = function () {
     var catalonia = function () {
         function flag (x, y, h, w) {
             var e = document.createElement("img");
-            e.src = "//upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Catalonia.svg/200px-Flag_of_Catalonia.svg.png";
+            e.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAACFCAYAAAAenrcsAAAABmJLR0QA/wD/AP+gvaeTAAABzElEQVR4nO3csU0DQRBAUQ6OwDIBQkTQDjU4pSlaoQGqQEgOnRICMhbQAPvTu+C9Cib52glGO532m98z4F/nSw8AayYQCAKBIBAIAoEgEAgCgSAQCAKBIBAIAoEgEAgCgTAfXy+WngFWa3q7uXPuDgNWLAgCgSAQCAKBIBAIAoEgEAgCgSAQCAKBIBAIAoEgEAjz9ePX0jPAak1+d4cxKxYEgUAQCASBQBAIBIFAEAgEgUAQCASBQBAIBIFAEAiE6bC7dc0LA353h2DFgiAQCAKBIBAIAoEgEAgCgSAQCAKBIBAIAoEgEAgCgTB9vmxd88LAfHn/s/QMsFpWLAgCgSAQCAKBIBAIAoEgEAgCgSAQCAKBIBAIAoEwfx80AiM+r4bg+YAgEAgCgSAQCAKBIBAIAoEgEAgCgSAQCAKBIBAIAoEwbx+OS88AqzWd9hvn7jBgxYIgEAgCgSAQCAKBIBAIAoEgEAgCgSAQCAKBIBAIAoEwvz9tlp4BVsvv7hCsWBAEAkEgEAQCQSAQBAJBIBAEAkEgEAQCQSAQBAJBIBCmj+cr17ww4Hd3CFYsCAKBIBAIAoEgEAgCgSAQCAKBIBAIAoEgEAgCgSAQCH+bnCV7VJfjPQAAAABJRU5ErkJggg==";
             e.style.position = "fixed";
             e.style.top = (y) + "px";
             e.style.left = (x) + "px";
