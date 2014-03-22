@@ -37,6 +37,100 @@ function checkJquery () {
 checkJquery();
 //Boilerplate for jQuery - end*/
 
+/*
+
+$.error()
+$.parseHTML()
+
+*/
+
+ /*--- waitForKeyElements(): A utility function, for Greasemonkey scripts,
+        that detects and handles AJAXed content.
+
+        Usage example:
+
+            waitForKeyElements (
+                "div.comments"
+                , commentCallbackFunction
+            );
+
+            //--- Page-specific function to do what we want when the node is found.
+            function commentCallbackfunction (jNode) {
+                jNode.text ("This comment changed by waitForKeyElements().");
+            }
+
+        IMPORTANT: This function requires your script to have loaded jQuery.
+    */
+var waitForKeyElements = function (
+        selectorTxt,    /* Required: The jQuery selector string that
+                            specifies the desired element(s).
+                        */
+        actionFunction, /* Required: The code to run when elements are
+                            found. It is passed a jNode to the matched
+                            element.
+                        */
+        bWaitOnce,      /* Optional: If false, will continue to scan for
+                            new elements even after the first match is
+                            found.
+                        */
+        iframeSelector  /* Optional: If set, identifies the iframe to
+                            search.
+                        */
+    ) {
+        var targetNodes, btargetsFound;
+
+        if (typeof iframeSelector == "undefined") {
+            targetNodes = $(selectorTxt);
+        } else {
+            targetNodes = $(iframeSelector).contents().find(selectorTxt);
+        }
+
+        if (targetNodes && targetNodes.length > 0) {
+            btargetsFound = true;
+            /*--- Found target node(s). Go through each and act if they
+                are new.
+            */
+            targetNodes.each(function () {
+                var jThis = $(this);
+                var alreadyFound = jThis.data('alreadyFound') || false;
+
+                if (!alreadyFound) {
+                    //--- Call the payload function.
+                    var cancelFound = actionFunction (jThis);
+                    if (cancelFound) {
+                        btargetsFound = false;
+                    } else {
+                        jThis.data('alreadyFound', true);
+                    }
+                }
+            });
+        } else {
+            btargetsFound = false;
+        }
+
+        //--- Get the timer-control variable for this selector.
+        var controlObj = waitForKeyElements.controlObj || {};
+        var controlKey = selectorTxt.replace(/[^\w]/g, "_");
+        var timeControl = controlObj[controlKey];
+
+        //--- Now set or clear the timer as appropriate.
+        if (btargetsFound && bWaitOnce && timeControl) {
+            //--- The only condition where we need to clear the timer.
+            clearInterval(timeControl);
+            delete controlObj[controlKey];
+        } else {
+            //--- Set a timer, if needed.
+            if (!timeControl) {
+                timeControl = setInterval(function () {
+                    waitForKeyElements(selectorTxt, actionFunction, bWaitOnce, iframeSelector);
+                }, 300);
+                
+                controlObj[controlKey] = timeControl;
+            }
+        }
+        waitForKeyElements.controlObj = controlObj;
+};
+
 var timetable = function () {
     // - - - VARIABLES - - - //
 
@@ -139,16 +233,53 @@ var timetable = function () {
     }
 
     function addGUI () {
-        //Boté a la barra superior del moodle
-        $(".yui3-menuitem").closest("ul").append($("<li class='yui3-menuitem'><a class='yui3-menuitem-content' id='timetable_button'>Horari</a></li>"));
+        //Botó a la barra superior del moodle
+        $(".yui3-menuitem").closest("ul").append(
+            $("<li>")
+            .addClass("yui3-menuitem")
+            .append(
+                $("<a>")
+                .prop("id", "timetable_button")
+                .prop("role", "menuitem")
+                .addClass("yui3-menuitem-content")
+                .text("Horari")
+            )
+        );
         
         //Div amagat per a la taula
-        $("#page-content").prepend($("<div style='padding-left: 50px;' id='timetable_container'><br><p><h1>HORARI</h1></p><table id='timetable_table' class='generaltable'></table></div>").hide());
-        var table = $("#timetable_table"), row = $("<tr class='custom_table_header'>"), dia, text;
+        $("#page-content").prepend(
+            $("<div>")
+            .prop("id", "timetable_container")
+            .css("padding-left", "50px")
+            .append($("<br>"))
+            .append(
+                $("<p>")
+                .append(
+                    $("<h1>")
+                    .text("HORARI")
+                )
+            )
+            .append(
+                $("<table>")
+                .prop("id", "timetable_table")
+                .addClass("generaltable")
+            )
+            .hide()
+        );
+
+        var table = $("#timetable_table"), row = $("<tr>").addClass("custom_table_header"), dia, text;
         
-        row.append($("<td style='border: 0px'><span id='timetable_update_button'>Actualitzar</span></td>")); //  Cel·la 0, 0
+        row.append(  //  Cel·la 0, 0
+            $("<td>")
+            .css("border", "0px")
+            .append(
+                $("<span>")
+                .prop("id", "timetable_update_button")
+                .text("Actualitzar")
+            )
+        );
         for (dia in horari) {
-            text = $("<span style='font-size=40px; font-weight:bold;'>").text(dia.charAt(0).toUpperCase() + dia.slice(1));
+            text = $("<span>").css("font-size", "20px").css("font-weight", "bold").text(dia.charAt(0).toUpperCase() + dia.slice(1));
             row.append($("<td>").addClass("r0").append(text));
         }
         table.append(row);
@@ -161,7 +292,7 @@ var timetable = function () {
                 row = $("<tr>").addClass("r1");
             }
             
-            row.append($("<td class='custom_table_hour'>").text(hores[hora]));
+            row.append($("<td>").addClass("custom_table_hour").text(hores[hora]));
             
             for (dia in horari) {
                 var class_obj = x_id[horari[dia][hora]];
@@ -229,29 +360,27 @@ var timetable = function () {
     }
 
     function main () {
-        $(document).ready(function () {
-            console.log("Initializing timetable");
+        console.log("Initializing timetable");
 
-            addCSS();
-            addGUI();
+        addCSS();
+        addGUI();
+        
+        $("#timetable_button").click(function () {  //Horari
+            console.log("clicked timetable");
             
-            $("#timetable_button").click(function () {  //Horari
-                console.log("clicked timetable");
-                
-                $("#timetable_container").slideToggle();
-            });
-            
-            $("#timetable_update_button").click(function () {  //Actualitza Horari
-                console.log("clicked update timetable");
-                
-                updateTable();
-            });
+            $("#timetable_container").slideToggle();
+        });
+        
+        $("#timetable_update_button").click(function () {  //Actualitza Horari
+            console.log("clicked update timetable");
             
             updateTable();
-            setInterval(updateTable, 1000);
-            
-            console.log("Timetable ok");
         });
+        
+        updateTable();
+        setInterval(updateTable, 1000);
+        
+        console.log("Timetable ok");
     }
 
     main();
@@ -262,7 +391,7 @@ var folders = function () {
     var plus_img_src = "data:image/gif;base64,R0lGODlhCwALAKEBAICAgP///wAAAP///yH5BAEKAAMALAAAAAALAAsAAAIajI8Gy6z5AjjiTEntE5zjH1TRFWogcjUqBBUAOw==";
 
     function tagThings () {
-        $(".accesshide:contains('Carpeta')").closest(".activityinstance").addClass("custom_folder");
+        $(".folder").find(".activityinstance").addClass("custom_folder");
     }
 
     function addCSS () {
@@ -271,40 +400,56 @@ var folders = function () {
 
     function addGUI () {
         //Carpetes
-        $(".custom_folder").closest(".activity").append($("<div class='tree_container'></div>").hide());
-        $(".custom_folder").prepend($("<span class='moar_btn' style='display:table-cell;vertical-align:middle;'><a style='margin-right:5px;'' href=javascript:void(0)><img alt='+' src='" + plus_img_src + "'></img></a></span>"));
+        $(".custom_folder").closest(".activity").append(
+            $("<div>")
+            .addClass("tree_container")
+            .hide()
+        );
+        $(".custom_folder").prepend(
+            $("<span>")
+            .addClass("moar_btn")
+            .css("display", "table-cell")
+            .css("vertical-align", "middle")
+            .append(
+                $("<a>")
+                .css("margin-right", "5px")
+                .prop("href", "javascript:void(0)")
+                .append(
+                    $("<img>")
+                    .prop("src", plus_img_src)
+                )
+            )
+        );
     }
 
     function main () {
-        $(document).ready(function () {
-            console.log("Initializing moodle folders");
+        console.log("Initializing moodle folders");
+        
+        tagThings();
+        addCSS();
+        addGUI();
+        
+        $(".moar_btn").click(function () { //Carpetes
+            console.log("clicked folder");
             
-            tagThings();
-            addCSS();
-            addGUI();
+            var
+            container = $(this).closest(".custom_folder"),
+            dir = container.children("a").prop("href"),
+            tree = container.closest(".activity").children(".tree_container");
             
-            $(".moar_btn").click(function () { //Carpetes
-                console.log("clicked folder");
-                
-                var
-                container = $(this).closest(".custom_folder"),
-                dir = container.children("a").prop("href"),
-                tree = container.closest(".activity").children(".tree_container");
-                
-                if (tree.is(":empty")) {
-                    tree.text("Loading...").slideToggle();
-                    tree.load(dir + " #folder_tree0", function (a, b, c) {
-                        tree.hide();
-                        tree.find("ul:eq(0)").replaceWith(tree.find("ul:eq(1)"));
-                        tree.slideDown();
-                    });
-                } else {
-                    tree.slideToggle();
-                }
-            });
-            
-            console.log("Folders ok");
+            if (tree.is(":empty")) {
+                tree.text("Loading...").slideToggle();
+                tree.load(dir + " #folder_tree0", function (a, b, c) {
+                    tree.hide();
+                    tree.find("ul:eq(0)").replaceWith(tree.find("ul:eq(1)"));
+                    tree.slideDown();
+                });
+            } else {
+                tree.slideToggle();
+            }
         });
+        
+        console.log("Folders ok");
     }
 
     main();
@@ -318,8 +463,9 @@ var activity_checker = function () {
     external_img_src = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIgogICB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgdmVyc2lvbj0iMS4xIgogICB3aWR0aD0iMTAiCiAgIGhlaWdodD0iMTAiCiAgIGlkPSJzdmcyIj4KICA8bWV0YWRhdGEKICAgICBpZD0ibWV0YWRhdGE3Ij4KICAgIDxyZGY6UkRGPgogICAgICA8Y2M6V29yawogICAgICAgICByZGY6YWJvdXQ9IiI+CiAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9zdmcreG1sPC9kYzpmb3JtYXQ+CiAgICAgICAgPGRjOnR5cGUKICAgICAgICAgICByZGY6cmVzb3VyY2U9Imh0dHA6Ly9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIiAvPgogICAgICAgIDxkYzp0aXRsZT48L2RjOnRpdGxlPgogICAgICA8L2NjOldvcms+CiAgICA8L3JkZjpSREY+CiAgPC9tZXRhZGF0YT4KICA8ZwogICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC04MjYuNDI4NTksLTY5OC43OTA3NykiCiAgICAgaWQ9ImxheWVyMSI+CiAgICA8cmVjdAogICAgICAgd2lkdGg9IjUuOTgyMTQyOSIKICAgICAgIGhlaWdodD0iNS45ODIxNDI5IgogICAgICAgeD0iODI2LjkyODU5IgogICAgICAgeT0iNzAyLjMwODY1IgogICAgICAgaWQ9InJlY3QyOTk2IgogICAgICAgc3R5bGU9ImZpbGw6I2ZmZmZmZjtmaWxsLW9wYWNpdHk6MTtzdHJva2U6IzAwNjZjYztzdHJva2Utd2lkdGg6MXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjEiIC8+CiAgICA8ZwogICAgICAgdHJhbnNmb3JtPSJtYXRyaXgoMC43MDcxMDY3OCwwLjcwNzEwNjc4LC0wLjcwNzEwNjc4LDAuNzA3MTA2NzgsNzYyLjg3LC0zNTkuODgzMzkpIgogICAgICAgaWQ9Imc0ODE1Ij4KICAgICAgPHBhdGgKICAgICAgICAgZD0ibSA3OTYuOTA4MTksNzAwLjI4MzE3IDMuNzAxMjcsLTMuNzAxMjYgMy44MTE3NCwzLjgxMTc1IC0wLjAxODksMi4yMDMzNiAtMS44NTIzNCwwIDAsMy44NTQzIC0zLjgwMjMzLDAgMCwtMy45NzEwOCAtMS44NTM2LDAgeiIKICAgICAgICAgaWQ9InBhdGg0Nzc3IgogICAgICAgICBzdHlsZT0iZmlsbDojMDA2NmZmO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTpub25lIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJtIDgwMC42MDk0Niw2OTguMDAyNDQgMy40Njk4NiwzLjQzODY1IC0yLjU3MDIsMCAwLDQuMDc0MzYgLTEuNzM2MiwwIDAsLTQuMDc0MzYgLTIuNjE3NTQsLTMuNmUtNCB6IgogICAgICAgICBpZD0icGF0aDQ3NzkiCiAgICAgICAgIHN0eWxlPSJmaWxsOiNmZmZmZmY7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOm5vbmUiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K";
 
     function tagThings () {
-        $(".accesshide:contains('Tasca')").closest(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
-        $(".accesshide:contains('Tasca (2.2)')").closest(".activityinstance").removeClass("custom_activity_1").addClass("custom_activity_2");
+        //.length
+        $(".assign").find(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
+        $(".assignment").find(".activityinstance").addClass("custom_activity").addClass("custom_activity_2");
 
         //El link de la entrega tindra aquesta classe
         $(".custom_activity").find("a").addClass("instance_url");
@@ -336,11 +482,45 @@ var activity_checker = function () {
 
     function addGUI () {
         //Comprovar totes les activitats
-        $(".yui3-menuitem").closest("ul").append($("<li class='yui3-menuitem'><a class='yui3-menuitem-content' id='check_button' title='Comprova totes les activitats del curs' >Comprovar activitats</a></li>"));
+        $(".yui3-menuitem").closest("ul").append(
+            $("<li>")
+            .addClass("yui3-menuitem")
+            .append(
+                $("<a>")
+                .prop("id", "check_button")
+                .prop("role", "menuitem")
+                .prop("title", "Comprova totes les activitats del curs")
+                .addClass("yui3-menuitem-content")
+                .text("Comprovar activitats")
+            )
+        );
         
         //Comprovar activitats d'una secció només
         waitForKeyElements(".yui3-tab-panel", function (node) {
-            node.prepend($("<div style='text-align:right;float:right;margin:2px;padding:5px;'><a title='Comprova només aquesta pestanya' href='javascript:void(0)'><span class='tab_check' style='margin:2px;padding:5px;background-color:#2775c4;border:solid 2px;border-color:#043667;border-radius:5px;color: white;'>Comprovar</span></a></div>"));
+            node.prepend(
+                $("<div>")
+                .css("text-align", "right")
+                .css("float", "right")
+                .css("margin", "2px")
+                .css("padding", "5px")
+                .append(
+                    $("<a>")
+                    .prop("title", "Comprova només aquesta pestanya")
+                    .prop("href", "javascript:void(0)")
+                    .append(
+                        $("<span>")
+                        .addClass("tab_check")
+                        .css("margin", "2px")
+                        .css("padding", "5px")
+                        .css("background-color", "#2775c4")
+                        .css("border", "solid")
+                        .css("border-color", "#043667")
+                        .css("border-radius", "5px")
+                        .css("color", "white")
+                        .text("Comprovar")
+                    )
+                )
+            );
             
             //Necessita estar qui, per que quan s'executa main, aixo encara no existeix.
             node.find(".tab_check").click(function () {
@@ -353,15 +533,67 @@ var activity_checker = function () {
         //Per que el clic a la imatge de la activitat no tingui cap efecte
         $(".single_check").each(function () {
             $(this).prependTo($(this).parent().parent());
-            $(this).wrap("<a title='Comprova aquesta activitat' href='javascript:void(0)'></a>");
+            $(this).wrap($("<a>").prop("title", "Comprova aquesta activitat").prop("href", "javascript:void(0)"));
         });
 
-        $(".custom_activity").append($("<a class='sub_btn' style='margin-left:10px;' title='Més informació sobre la tramesa' href='javascript:void(0)'>[info]</a>").hide());
-        $(".custom_activity").append($("<div class='quick_info' style='margin-left:10px;'></div>"));
-        $(".custom_activity").after($("<div class='sub_container' style='border-width:10px;border-color:transparent;border-style:solid;'></div>").hide());
-        
+        //sub_btn
+        $(".custom_activity").append(
+            $("<a>")
+            .addClass("sub_btn")
+            .css("margin-left", "10px")
+            .prop("title", "Més informació sobre la tramesa")
+            .prop("href", "javascript:void(0)")
+            .text("[info]")
+            .hide()
+        )
+
+        //quick_info box
+        .append($("<div>").addClass("quick_info").css("margin-left", "10px"))
+
+        //sub_container
+        .after(
+            $("<div>")
+            .addClass("sub_container")
+            .css("border-width", "10px")
+            .css("border-color", "transparent")
+            .css("border-style", "solid")
+            .hide()
+        );
+
         //Percentatge
-        $("#page").before($("<div align='center' style='width:100%;position:fixed;z-index:999;'><div id='progress_aligner' align='left'><div id='progress_container' style='display:none;'><div id='progress' align='center' style='height:15px;background-color:#1ee713;border:solid 2px;border-color:#17a30f;width:0%;'><span id='progress_display'>0%</span></div></div></div>"));
+        $("#page").before(
+            $("<div>")
+            .prop("align", "center")
+            .css("width", "100%")
+            .css("position", "fixed")
+            .css("z-index", "999")
+            .append(
+                $("<div>")
+                .prop("id", "progress_aligner")
+                .prop("align", "left")
+                .append(
+                    $("<div>")
+                    .prop("id", "progress_container")
+                    .hide()
+                    .append(
+                        $("<div>")
+                        .prop("id", "progress")
+                        .prop("align", "center")
+                        .css("height", "15px")
+                        .css("background-color", "#1ee713")
+                        .css("border-style", "solid")
+                        .css("border-width", "2px")
+                        .css("border-color", "#17a30f")
+                        .css("width", "0%")
+                        .append(
+                            $("<span>")
+                            .prop("id", "progress_display")
+                            .text("0%")
+                        )
+                    )
+                )
+            )
+        );
         $("#progress_aligner").width($("#menuwrap").width());
     }
 
@@ -378,7 +610,7 @@ var activity_checker = function () {
         pending = function () {custom_activity_node.addClass("activity_pending");},
         passed = function () {custom_activity_node.addClass("activity_passed");},
 
-        fillSUbContainer = function (node) {sub_container.prepend(node);sub_btn.show();};
+        fillSubcontainer = function (node) {sub_container.prepend(node);sub_btn.show();};
         
         if (custom_activity_node.hasClass("custom_activity")) {
             console.log("checking activity");
@@ -398,7 +630,17 @@ var activity_checker = function () {
             quick_info.empty();
 
             //Afegim un link per anar a la tramesa completa (Useless)
-            sub_container.append($("<a target='_blank' href='" + instance_url + "' style='font-weight:bolder;'>Anar a la tramesa completa <img src='" + external_img_src + "'></img></a>"));
+            sub_container.append(
+                $("<a>")
+                .prop("target", "_blank")
+                .prop("href", instance_url)
+                .css("font-weight", "bolder")
+                .text("Anar a la tramesa completa ")
+                .append(
+                    $("<img>")
+                    .prop("src", external_img_src)
+                )
+            );
             
             $.get(instance_url).done(function (data) {
                 count += 1;
@@ -412,7 +654,7 @@ var activity_checker = function () {
                         } else {
                             done();
                             if (page.find(".feedbacktable").length > 0) {
-                                fillSUbContainer(page.find(".feedbacktable"));
+                                fillSubcontainer(page.find(".feedbacktable"));
                             }
                         }
                     } else {
@@ -430,7 +672,7 @@ var activity_checker = function () {
                     if (page.find(".files").find("a").length > 0) {
                         done();
                         if (page.find(".feedback").length > 0) {
-                            fillSUbContainer(page.find(".feedbacktable"));
+                            fillSubcontainer(page.find(".feedbacktable"));
                         }
                     } else {
                         pending();
@@ -502,121 +744,32 @@ var activity_checker = function () {
             });
         }
     }
-
-    /*--- waitForKeyElements(): A utility function, for Greasemonkey scripts,
-        that detects and handles AJAXed content.
-
-        Usage example:
-
-            waitForKeyElements (
-                "div.comments"
-                , commentCallbackFunction
-            );
-
-            //--- Page-specific function to do what we want when the node is found.
-            function commentCallbackfunction (jNode) {
-                jNode.text ("This comment changed by waitForKeyElements().");
-            }
-
-        IMPORTANT: This function requires your script to have loaded jQuery.
-    */
-    function waitForKeyElements (
-        selectorTxt,    /* Required: The jQuery selector string that
-                            specifies the desired element(s).
-                        */
-        actionFunction, /* Required: The code to run when elements are
-                            found. It is passed a jNode to the matched
-                            element.
-                        */
-        bWaitOnce,      /* Optional: If false, will continue to scan for
-                            new elements even after the first match is
-                            found.
-                        */
-        iframeSelector  /* Optional: If set, identifies the iframe to
-                            search.
-                        */
-    ) {
-        var targetNodes, btargetsFound;
-
-        if (typeof iframeSelector == "undefined") {
-            targetNodes = $(selectorTxt);
-        } else {
-            targetNodes = $(iframeSelector).contents().find(selectorTxt);
-        }
-
-        if (targetNodes && targetNodes.length > 0) {
-            btargetsFound = true;
-            /*--- Found target node(s). Go through each and act if they
-                are new.
-            */
-            targetNodes.each(function () {
-                var jThis = $(this);
-                var alreadyFound = jThis.data('alreadyFound') || false;
-
-                if (!alreadyFound) {
-                    //--- Call the payload function.
-                    var cancelFound = actionFunction (jThis);
-                    if (cancelFound) {
-                        btargetsFound = false;
-                    } else {
-                        jThis.data('alreadyFound', true);
-                    }
-                }
-            });
-        } else {
-            btargetsFound = false;
-        }
-
-        //--- Get the timer-control variable for this selector.
-        var controlObj = waitForKeyElements.controlObj || {};
-        var controlKey = selectorTxt.replace(/[^\w]/g, "_");
-        var timeControl = controlObj[controlKey];
-
-        //--- Now set or clear the timer as appropriate.
-        if (btargetsFound && bWaitOnce && timeControl) {
-            //--- The only condition where we need to clear the timer.
-            clearInterval(timeControl);
-            delete controlObj[controlKey];
-        } else {
-            //--- Set a timer, if needed.
-            if (!timeControl) {
-                timeControl = setInterval(function () {
-                    waitForKeyElements(selectorTxt, actionFunction, bWaitOnce, iframeSelector);
-                }, 300);
-                
-                controlObj[controlKey] = timeControl;
-            }
-        }
-        waitForKeyElements.controlObj = controlObj;
-    }
     
     function main () {
-        $(document).ready(function () {
-            console.log("Initializing Activity checker");
-            
-            tagThings();
-            addCSS();
-            addGUI();
-            
-            $("#check_button").click(function () {
-                checkAllActivities();
-            });
-            
-            $(".single_check").click(function () {
-                populateActivity($(this).closest(".custom_activity"));
-            });
-
-            $(".sub_btn").click(function () {
-                console.log("clicked submission moar");
-                $(this).parent().parent().find(".sub_container").slideToggle();
-            });
-            
-            console.log("Activity checker ok");
-            
-            if (window.location.hash === "#check_all") {
-                checkAllActivities();
-            }
+        console.log("Initializing Activity checker");
+        
+        tagThings();
+        addCSS();
+        addGUI();
+        
+        $("#check_button").click(function () {
+            checkAllActivities();
         });
+        
+        $(".single_check").click(function () {
+            populateActivity($(this).closest(".custom_activity"));
+        });
+
+        $(".sub_btn").click(function () {
+            console.log("clicked submission moar");
+            $(this).parent().parent().find(".sub_container").slideToggle();
+        });
+        
+        console.log("Activity checker ok");
+        
+        if (window.location.hash === "#check_all") {
+            checkAllActivities();
+        }
     }
 
     main();
@@ -709,30 +862,32 @@ var easter_eggs = function () {
 };
 
 function main () {
-    easter_eggs();
+    $(document).ready(function () {
+        easter_eggs();
 
-    var url = window.location.href;
+        var url = window.location.href;
 
-    if (/.*/.test(url)) {  //Silly, pero mantenim l'estil
-        console.log("main");
-        timetable();
-    }
+        if (/.*/.test(url)) {  //Silly, pero mantenim l'estil
+            console.log("main");
+            timetable();
+        }
 
-    if (/\/course\//.test(url)) {
-        console.log("course");
-        activity_checker();
-        folders();
-    }
+        if (/\/course\//.test(url)) {
+            console.log("course");
+            activity_checker();
+            folders();
+        }
 
-    if (/mod\/assign\//.test(url)) {
-        console.log("mod assign");
-        autotramesa();
-    }
+        if (/mod\/assign\//.test(url)) {
+            console.log("mod assign");
+            autotramesa();
+        }
 
-    if (/mod\/url\//.test(url) || /mod\/resource\//.test(url)) {
-        console.log("resource");
-        autoresource();
-    }
+        if (/mod\/url\//.test(url) || /mod\/resource\//.test(url)) {
+            console.log("resource");
+            autoresource();
+        }
+    })
 }
 
 main();
