@@ -38,23 +38,23 @@ checkJquery();
 //Boilerplate for jQuery - end*/
 
 
- /*--- waitForKeyElements(): A utility function, for Greasemonkey scripts,
-        that detects and handles AJAXed content.
+/*--- waitForKeyElements(): A utility function, for Greasemonkey scripts,
+    that detects and handles AJAXed content.
 
-        Usage example:
+    Usage example:
 
-            waitForKeyElements (
-                "div.comments"
-                , commentCallbackFunction
-            );
+        waitForKeyElements (
+            "div.comments"
+            , commentCallbackFunction
+        );
 
-            //--- Page-specific function to do what we want when the node is found.
-            function commentCallbackfunction (jNode) {
-                jNode.text ("This comment changed by waitForKeyElements().");
-            }
+        //--- Page-specific function to do what we want when the node is found.
+        function commentCallbackfunction (jNode) {
+            jNode.text ("This comment changed by waitForKeyElements().");
+        }
 
-        IMPORTANT: This function requires your script to have loaded jQuery.
-    */
+    IMPORTANT: This function requires your script to have loaded jQuery.
+*/
 var waitForKeyElements = function (
         selectorTxt,    /* Required: The jQuery selector string that
                             specifies the desired element(s).
@@ -128,7 +128,7 @@ var waitForKeyElements = function (
 var timetable = function () {
     // - - - VARIABLES - - - //
 
-    //Es pot espandir, només cal tenir en compte de mantenir la estructura com ara.
+    //Es pot expandir, només cal tenir en compte mantenir la estructura com ara.
     //És important que el format de les hores sigui "hora:minuts - hora:minuts"
     //Haurá d'estar en format de 24 hores.
     var hores = [
@@ -223,7 +223,9 @@ var timetable = function () {
 
     function addCSS () {
         //Per la classe highlighted
-        $("<style>").text("#timetable_table tr>td.current_class{background-color:#8AE62E; border: 3px solid green};").appendTo("head");
+        $("<style>")
+        .text("#timetable_table tr>td.current_class{background-color:#8AE62E; border: 3px solid green};")
+        .appendTo("head");
     }
 
     function addGUI () {
@@ -261,7 +263,11 @@ var timetable = function () {
             .hide()
         );
 
-        var table = $("#timetable_table"), row = $("<tr>").addClass("custom_table_header"), dia, text;
+        var
+        table = $("#timetable_table"),
+        row = $("<tr>").addClass("custom_table_header"),
+        dia,
+        text;
         
         row.append(  //  Cel·la 0, 0
             $("<td>")
@@ -273,7 +279,10 @@ var timetable = function () {
             )
         );
         for (dia in horari) {
-            text = $("<span>").css("font-size", "20px").css("font-weight", "bold").text(dia.charAt(0).toUpperCase() + dia.slice(1));
+            text = $("<span>")
+                    .css("font-size", "20px")
+                    .css("font-weight", "bold")
+                    .text(dia.charAt(0).toUpperCase() + dia.slice(1));
             row.append($("<td>").addClass("r0").append(text));
         }
         table.append(row);
@@ -286,7 +295,11 @@ var timetable = function () {
                 row = $("<tr>").addClass("r1");
             }
             
-            row.append($("<td>").addClass("custom_table_hour").text(hores[hora]));
+            row.append(
+                $("<td>").
+                addClass("custom_table_hour").
+                text(hores[hora])
+            );
             
             for (dia in horari) {
                 var class_obj = x_id[horari[dia][hora]];
@@ -345,7 +358,11 @@ var timetable = function () {
         
         //Afegim la classe CSS a la cel·la correcte
         if (current > -1 && date.getDay() > 0) {
-            var td = $("#timetable_table").find("tr").eq(current + 1).find("td").eq(date.getDay());
+            var td = $("#timetable_table")
+                     .find("tr")
+                     .eq(current + 1)
+                     .find("td")
+                     .eq(date.getDay());
             if (td.html() !== "") {
                 td.addClass("current_class");
             }
@@ -389,7 +406,9 @@ var folders = function () {
     }
 
     function addCSS () {
-        $("<style>").text(".custom_folder {margin-left:-15px;display:table;}").appendTo("head");
+        $("<style>")
+        .text(".custom_folder {margin-left:-15px;display:table;}")
+        .appendTo("head");
     }
 
     function addGUI () {
@@ -458,8 +477,11 @@ var activity_checker = function () {
 
     function tagThings () {
         //.length
-        $(".assign").find(".activityinstance").addClass("custom_activity").addClass("custom_activity_1");
-        $(".assignment").find(".activityinstance").addClass("custom_activity").addClass("custom_activity_2");
+        $(".assign").find(".activityinstance")
+        .addClass("custom_activity").addClass("custom_activity_1");
+        
+        $(".assignment").find(".activityinstance")
+        .addClass("custom_activity").addClass("custom_activity_2");
 
         //El link de la entrega tindra aquesta classe
         $(".custom_activity").find("a").addClass("instance_url");
@@ -468,12 +490,14 @@ var activity_checker = function () {
     }
 
     function addCSS () {
-        $("<style>").text(".activity_done {background-color:#80FF80}").appendTo("head");
-        $("<style>").text(".activity_passed {background-color:#FF9999}").appendTo("head");
-        $("<style>").text(".activity_pending {background-color:#FFFF00}").appendTo("head");
-        $("<style>").text(".activity_unknown {background-color:#C0C0C0}").appendTo("head");
+        $("head").append(
+            $("<style>").text(".activity_done {background-color:#80FF80}"),
+            $("<style>").text(".activity_passed {background-color:#FF9999}"),
+            $("<style>").text(".activity_pending {background-color:#FFFF00}"),
+            $("<style>").text(".activity_unknown {background-color:#C0C0C0}"),
 
-        $("<style>").text(".quick_info>* {margin-left:3px;margin-right:3px}").appendTo("head");
+            $("<style>").text(".quick_info>* {margin-left:3px;margin-right:3px}")
+        );
     }
 
     function addGUI () {
@@ -518,7 +542,8 @@ var activity_checker = function () {
                 )
             );
             
-            //Necessita estar qui, per que quan s'executa main, aixo encara no existeix.
+            //Necessita estar qui, per que quan s'executa main,
+            //aixo encara no existeix.
             node.find(".tab_check").click(function () {
                 total = 0;
                 count = 0;
@@ -529,7 +554,11 @@ var activity_checker = function () {
         //Per que el clic a la imatge de la activitat no tingui cap efecte
         $(".single_check").each(function () {
             $(this).prependTo($(this).parent().parent());
-            $(this).wrap($("<a>").prop("title", "Comprova aquesta activitat").prop("href", "javascript:void(0)"));
+            $(this).wrap(
+                $("<a>")
+                .prop("title", "Comprova aquesta activitat")
+                .prop("href", "javascript:void(0)")
+            );
         });
 
         //sub_btn
@@ -602,11 +631,20 @@ var activity_checker = function () {
         quick_info = custom_activity_node.find(".quick_info"),
         instance_url = custom_activity_node.find(".instance_url").prop("href"),
 
-        done = function () {custom_activity_node.addClass("activity_done");},
-        pending = function () {custom_activity_node.addClass("activity_pending");},
-        passed = function () {custom_activity_node.addClass("activity_passed");},
+        done = function () {
+            custom_activity_node.addClass("activity_done");
+        },
+        pending = function () {
+            custom_activity_node.addClass("activity_pending");
+         },
+        passed = function () {
+            custom_activity_node.addClass("activity_passed");
+        },
 
-        fillSubcontainer = function (node) {sub_container.prepend(node);sub_btn.show();};
+        fillSubcontainer = function (node) {
+            sub_container.prepend(node);
+            sub_btn.show();
+        };
         
         if (custom_activity_node.hasClass("custom_activity")) {
             console.log("checking activity");
@@ -658,9 +696,14 @@ var activity_checker = function () {
                             passed();
                         } else {
                             pending();
-                            var remaining = page.find(".lastrow").find(".lastcol").text();
-                            quick_info.append($("<span>").text("[Temps restant: " + remaining + " ]"));
+                            var remaining = page.find(".lastrow")
+                                            .find(".lastcol")
+                                            .text();
                             quick_info.append(
+                                $("<span>")
+                                .text("[Temps restant: " + remaining + " ]")
+                            )
+                            .append(
                                 $("<a>")
                                 .prop("target", "_blank")
                                 .prop("href", instance_url + "#autotramesa")
@@ -684,8 +727,11 @@ var activity_checker = function () {
                         pending();
                         var date = page.find(".c1").eq(1).text();
                         if (date !== "") {
-                            quick_info.append($("<span>").text("[Data d'entrega: " + date + " ]"));
                             quick_info.append(
+                                $("<span>")
+                                .text("[Data d'entrega: " + date + " ]")
+                            )
+                            .append(
                                 $("<a>")
                                 .prop("target", "_blank")
                                 .prop("href", instance_url + "#autotramesa")
@@ -730,13 +776,13 @@ var activity_checker = function () {
     }
 
     function updateProgress () {
-        var percent = (count / total) * 100;
-
-        var percent_str = percent.toString(), percent_dot = percent_str.indexOf(".");
+        var
+        percent = (count / total) * 100,
+        percent_str = percent.toString(),
+        percent_dot = percent_str.indexOf(".");
         if (percent_dot > 0) {
-            percent_str = percent_str.slice(0, percent_dot);
+            percent_str = percent_str.slice(0, percent_dot) + "%";
         }
-        percent_str = percent_str + "%";
         
         if (percent > 0 && percent < 100) {
             console.log("update progress:", percent);
@@ -793,7 +839,8 @@ var activity_checker = function () {
 
 var autotramesa = function () {
     function main () {
-        if ($(".portfolio-add-link").length === 0 && window.location.hash === "#autotramesa") {
+        if ($(".portfolio-add-link").length === 0
+            && window.location.hash === "#autotramesa") {
             $("form").find("input").first().click();
         }
     }
@@ -804,7 +851,9 @@ var autotramesa = function () {
 var autoresource = function () {
     function main () {
         if ($(".resourceworkaround").length > 0) {
-            window.location.href = $(".resourceworkaround").find("a").prop("href");
+            window.location.href = $(".resourceworkaround")
+                                   .find("a")
+                                   .prop("href");
         }
 
         if ($(".urlworkaround").length > 0) {
@@ -834,7 +883,12 @@ var easter_eggs = function () {
             document.body.appendChild(e);
             e.style.MozAnimation = "hearts 3s";
         }
-        function randomHeart () {heart(Math.random()*window.screen.width,Math.random()*window.screen.height, 70);}
+        function randomHeart () {
+            heart(
+                Math.random()*window.screen.width,
+                Math.random()*window.screen.height,
+                70);
+        }
         randomHeart();
         setInterval(randomHeart, 2000);
         
