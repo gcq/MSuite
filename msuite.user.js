@@ -9,6 +9,8 @@
 // @grant       none
 // ==/UserScript==
 
+/*jshint scripturl:true*/
+
 /*//Boilerplate for jQuery - start
 //Code from http://snipplr.com/view/54863/wait-for-jquery-to-load/
 var checker = 0;
@@ -839,8 +841,8 @@ var activity_checker = function () {
 
 var autotramesa = function () {
     function main () {
-        if ($(".portfolio-add-link").length === 0
-            && window.location.hash === "#autotramesa") {
+        if ($(".portfolio-add-link").length === 0 &&
+            window.location.hash === "#autotramesa") {
             $("form").find("input").first().click();
         }
     }
@@ -957,7 +959,7 @@ function main () {
             console.log("resource");
             autoresource();
         }
-    })
+    });
 }
 
 main();
