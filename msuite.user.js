@@ -472,6 +472,8 @@ var activity_checker = function () {
         $("<style>").text(".activity_passed {background-color:#FF9999}").appendTo("head");
         $("<style>").text(".activity_pending {background-color:#FFFF00}").appendTo("head");
         $("<style>").text(".activity_unknown {background-color:#C0C0C0}").appendTo("head");
+
+        $("<style>").text(".quick_info>* {margin-left:3px;margin-right:3px}").appendTo("head");
     }
 
     function addGUI () {
@@ -657,7 +659,17 @@ var activity_checker = function () {
                         } else {
                             pending();
                             var remaining = page.find(".lastrow").find(".lastcol").text();
-                            quick_info.text("[Temps restant: " + remaining + " ]");
+                            quick_info.append($("<span>").text("[Temps restant: " + remaining + " ]"));
+                            quick_info.append(
+                                $("<a>")
+                                .prop("target", "_blank")
+                                .prop("href", instance_url + "#autotramesa")
+                                .text("Trametre ")
+                                .append(
+                                    $("<img>")
+                                    .prop("src", external_img_src)
+                                )
+                            );
                         }
                     }
                 }
@@ -672,7 +684,17 @@ var activity_checker = function () {
                         pending();
                         var date = page.find(".c1").eq(1).text();
                         if (date !== "") {
-                            quick_info.text("[Data d'entrega: " + date + " ]");
+                            quick_info.append($("<span>").text("[Data d'entrega: " + date + " ]"));
+                            quick_info.append(
+                                $("<a>")
+                                .prop("target", "_blank")
+                                .prop("href", instance_url + "#autotramesa")
+                                .text("Trametre ")
+                                .append(
+                                    $("<img>")
+                                    .prop("src", external_img_src)
+                                )
+                            );
                         }
                     }
                 }
