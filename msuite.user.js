@@ -37,12 +37,6 @@ function checkJquery () {
 checkJquery();
 //Boilerplate for jQuery - end*/
 
-/*
-
-$.error()
-$.parseHTML()
-
-*/
 
  /*--- waitForKeyElements(): A utility function, for Greasemonkey scripts,
         that detects and handles AJAXed content.
@@ -645,7 +639,7 @@ var activity_checker = function () {
             $.get(instance_url).done(function (data) {
                 count += 1;
                 updateProgress();
-                var page = $($.trim(data));
+                var page = $($.parseHTML(data));
                 
                 if (custom_activity_node.hasClass("custom_activity_1")) {
                     if (page.find(".submissionstatussubmitted").length > 0) {
