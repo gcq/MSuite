@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 // @name        Moodle Suite
 // @namespace   http://userscripts.org/users/392674
 // @description Suite per al Moodle
@@ -643,9 +643,32 @@ var activity_checker = function () {
             custom_activity_node.addClass("activity_passed");
         },
 
-        fillSubcontainer = function (node) {
-            sub_container.prepend(node);
+        addToSubContainer = function (node) {
+            sub_container.last().before(node);
             sub_btn.show();
+        },
+
+        setQuickInfo = function (data) {
+            quick_info.empty();
+
+            quick_info.append(
+                $("<span>").text(data)
+            )
+            .append(
+                $("<a>")
+                .prop("target", "_blank")
+                .prop("href", instance_url + "&action=editsubmission")
+                .text("Trametre ")
+                .append(
+                    $("<img>")
+                    .prop("src", external_img_src)
+                )
+                .click(
+                    $(window).one("focus", function () {
+                        populateActivity(custom_activity_node);
+                    })
+                )
+            );
         };
         
         if (custom_activity_node.hasClass("custom_activity")) {
@@ -690,7 +713,7 @@ var activity_checker = function () {
                         } else {
                             done();
                             if (page.find(".feedbacktable").length > 0) {
-                                fillSubcontainer(page.find(".feedbacktable"));
+                                addToSubContainer(page.find(".feedbacktable"));
                             }
                         }
                     } else {
@@ -701,20 +724,7 @@ var activity_checker = function () {
                             var remaining = page.find(".lastrow")
                                             .find(".lastcol")
                                             .text();
-                            quick_info.append(
-                                $("<span>")
-                                .text("[Temps restant: " + remaining + " ]")
-                            )
-                            .append(
-                                $("<a>")
-                                .prop("target", "_blank")
-                                .prop("href", instance_url + "#autotramesa")
-                                .text("Trametre ")
-                                .append(
-                                    $("<img>")
-                                    .prop("src", external_img_src)
-                                )
-                            );
+                            setQuickInfo("[Temps restant: " + remaining + " ]");
                         }
                     }
                 }
@@ -723,26 +733,13 @@ var activity_checker = function () {
                     if (page.find(".files").find("a").length > 0) {
                         done();
                         if (page.find(".feedback").length > 0) {
-                            fillSubcontainer(page.find(".feedbacktable"));
+                            addToSubContainer(page.find(".feedbacktable"));
                         }
                     } else {
                         pending();
                         var date = page.find(".c1").eq(1).text();
                         if (date !== "") {
-                            quick_info.append(
-                                $("<span>")
-                                .text("[Data d'entrega: " + date + " ]")
-                            )
-                            .append(
-                                $("<a>")
-                                .prop("target", "_blank")
-                                .prop("href", instance_url + "#autotramesa")
-                                .text("Trametre ")
-                                .append(
-                                    $("<img>")
-                                    .prop("src", external_img_src)
-                                )
-                            );
+                            setQuickInfo("[Data d'entrega: " + date + " ]");
                         }
                     }
                 }
