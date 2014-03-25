@@ -865,6 +865,22 @@ var autoresource = function () {
     main();
 };
 
+var active_keys = [];
+var keys = function () {
+    $(document).keydown(function (event) {
+        if (active_keys.indexOf(event.which) === -1) {
+            active_keys.push(event.which);
+        }
+    });
+
+    $(document).keyup(function (event) {
+        active_keys = active_keys.filter(function (element) {
+            return element !== event.which;
+        });
+    });
+};
+var keyPressed = function (key) {return active_keys.indexOf(key) !== -1;};
+
 var easter_eggs = function () {
     var valentines = function () {
         var s=document.createElement('style');
@@ -935,6 +951,7 @@ var easter_eggs = function () {
 function main () {
     $(document).ready(function () {
         easter_eggs();
+        keys();
 
         var url = window.location.href;
 
