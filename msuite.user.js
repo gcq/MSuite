@@ -823,8 +823,15 @@ var activity_checker = function () {
             checkAllActivities();
         });
         
-        $(".single_check").click(function () {
-            populateActivity($(this).closest(".custom_activity"));
+        $(".single_check").click(function (event) {
+            var activity = $(this).closest(".custom_activity");
+
+            if (isKeyDown(17)) {  //CONTROL + click = netejar
+                event.preventDefault();
+                clearActivity(activity);
+            } else {
+                populateActivity(activity);
+            }
         });
 
         $(".sub_btn").click(function () {
@@ -883,7 +890,7 @@ var keys = function () {
         });
     });
 };
-var keyPressed = function (key) {return active_keys.indexOf(key) !== -1;};
+var isKeyDown = function (key) {return active_keys.indexOf(key) !== -1;};
 
 var easter_eggs = function () {
     var valentines = function () {
