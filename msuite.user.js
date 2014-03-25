@@ -627,6 +627,22 @@ var activity_checker = function () {
         $("#progress_aligner").width($("#menuwrap").width());
     }
 
+    function clearActivity (activity_node) {
+        //Traiem el color
+        activity_node
+        .removeClass("activity_done")
+        .removeClass("activity_passed")
+        .removeClass("activity_pending")
+        .removeClass("activity_unknown");
+
+        //Amaguem el botó de més info
+        activity_node.find(".sub_btn").hide();
+
+        //Buidem la info
+        activity_node.parent().find(".sub_container").slideUp().empty();
+        activity_node.find(".quick_info").empty();
+    }
+
     function populateActivity (custom_activity_node) {
         custom_activity_node = $(custom_activity_node);
 
@@ -676,19 +692,7 @@ var activity_checker = function () {
         if (custom_activity_node.hasClass("custom_activity")) {
             console.log("checking activity");
 
-            //Traiem el color
-            custom_activity_node
-            .removeClass("activity_done")
-            .removeClass("activity_passed")
-            .removeClass("activity_pending")
-            .removeClass("activity_unknown");
-
-            //Amaguem el botó de més info
-            sub_btn.hide();
-
-            //Buidem la info
-            sub_container.slideUp().empty();
-            quick_info.empty();
+            clearActivity(custom_activity_node);
 
             //Afegim un link per anar a la tramesa completa (Useless)
             sub_container.append(
