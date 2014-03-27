@@ -681,11 +681,13 @@ var activity_checker = function () {
                     $("<img>")
                     .prop("src", external_img_src)
                 )
-                .click(
-                    $(window).one("focus", function () {
-                        populateActivity(custom_activity_node);
-                    })
-                )
+                .click(function () {
+                    if (!isKeyDown(17)) {
+                        $(window).one("focus", function () {
+                            populateActivity(custom_activity_node);
+                        });
+                    }
+                })
             );
         };
         
