@@ -851,17 +851,6 @@ var default_tab = function () {
     });
 };
 
-var autotramesa = function () {
-    function main () {
-        if ($(".portfolio-add-link").length === 0 &&
-            window.location.hash === "#autotramesa") {
-            $("form").find("input").first().click();
-        }
-    }
-
-    main();
-};
-
 var autoresource = function () {
     function main () {
         if ($(".resourceworkaround").length > 0) {
@@ -986,11 +975,6 @@ function main () {
             activity_checker();
             default_tab();
             folders();
-        }
-
-        if (/mod\/assign\//.test(url)) {
-            console.log("mod assign");
-            autotramesa();
         }
 
         if (/mod\/url\//.test(url) || /mod\/resource\//.test(url)) {
