@@ -851,6 +851,67 @@ var activity_checker = function () {
     main();
 };
 
+var default_tab = function () {
+    function addGUI () {
+        var labels = $(".yui3-tab-label");
+
+        labels.each(function () {
+            var label = $(this),
+                text = label.text();
+
+            label
+            .empty()
+            .append(
+                $("<span>")
+                .css("display", "inline-block")
+                .css("vertical-align", "middle")
+                .text(text)
+            );
+        });
+
+        labels.append(
+            $("<span>")
+            .addClass("default_tab")
+            .css("display", "inline-block")
+            .css("height", "5px")
+            .css("width", "5px")
+            .css("border-radius", "100%")
+            .css("border-style", "solid")
+            .css("border-width", "1px")
+            .css("border-color", "#D8D8D8")
+            .css("margin-left", "5px")
+            .css("vertical-align", "middle")
+            .css("background-color", "green")
+            .hide()
+        );
+    }
+
+    function setTab (tab) {
+        tab = $(tab);
+        $(".default_tab").hide();
+        tab.find(".default_tab").show();
+        localStorage[thisId() + "_default_tab"] = tab.index();
+    }
+
+    function main () {
+        addGUI();
+
+        var tab = $(".yui3-tab").eq(localStorage[thisId() + "_default_tab"]);
+        setTab(tab);
+        tab.click();
+
+        $(".yui3-tab").click(function () {
+            if (isKeyDown(17)) {
+                setTab(this);
+            }
+        });
+    }
+
+    waitForKeyElements(".yui3-tabview-list", function (node) {
+        main();
+    });
+};
+
 var autotramesa = function () {
     function main () {
         if ($(".portfolio-add-link").length === 0 &&
@@ -876,6 +937,14 @@ var autoresource = function () {
     }
 
     main();
+};
+
+var thisId = function () {
+    if (/\?id=(\d+)/.test(window.location.href)) {
+        return /\?id=(\d+)/.exec(window.location.href)[1];
+    } else {
+        return false;
+    }
 };
 
 var active_keys = [];
@@ -976,6 +1045,7 @@ function main () {
         if (/\/course\//.test(url)) {
             console.log("course");
             activity_checker();
+            default_tab();
             folders();
         }
 
