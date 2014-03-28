@@ -5,7 +5,7 @@
 // @include     *://noumoodle.bernatelferrer.cat/*
 // @include     *://192.168.0.9/*
 // @require     http://code.jquery.com/jquery-2.0.3.min.js
-// @version     0.1.10
+// @version     0.2.0
 // @grant       none
 // ==/UserScript==
 
