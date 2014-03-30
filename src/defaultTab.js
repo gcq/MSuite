@@ -41,7 +41,12 @@ function addGUI () {
 function getSavedTab () {
     console.log("getSavedTab");
 
-    var id = localStorage[thisId() + "_default_tab"];
+    if (localStorage.default_tab === undefined) {
+        console.log("localStorage.default_tab init");
+        localStorage.default_tab = JSON.stringify({});
+    }
+
+    var id = JSON.parse(localStorage.default_tab)[thisId()];
 
     if (id !== undefined) {
         return id;
@@ -53,7 +58,10 @@ function getSavedTab () {
 function setSavedTab (id) {
     console.log("setSavedTab", id);
 
-    localStorage[thisId() + "_default_tab"] = id;
+    var original = JSON.parse(localStorage.default_tab);
+    original[thisId()] = id;
+
+    localStorage.default_tab = JSON.stringify(original);
 }
 
 function getTabById (id) {
@@ -75,7 +83,10 @@ function highlightTab (id) {
     setSavedTab(id);
     $(".default_tab").hide();
     tab.find(".default_tab").show();
-    tab.click();
+    
+    if (!isKeyDown(17)) {  //Evitem un loop XD
+        tab.click();
+    }
 }
 
 function main () {
@@ -87,7 +98,7 @@ function main () {
     if (tab !== -1) {
         highlightTab(tab);
     } else {
-        setSavedTab(0);
+        highlightTab(0);
     }
 
     $(".yui3-tab").click(function () {
