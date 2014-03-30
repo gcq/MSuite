@@ -19,7 +19,7 @@ top = """// ==UserScript==
 browserify_output = subprocess.check_output(
     [
         "C:/Users/Gcq/AppData/Roaming/npm/browserify.cmd",
-        "main.js"
+        "src/main.js"
     ],
     universal_newlines=True
 )
