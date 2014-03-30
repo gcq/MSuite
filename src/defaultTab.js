@@ -38,24 +38,61 @@ function addGUI () {
     );
 }
 
-function setTab (tab) {
-    tab = $(tab);
+function getSavedTab () {
+    console.log("getSavedTab");
+
+    var id = localStorage[thisId() + "_default_tab"];
+
+    if (id !== undefined) {
+        return id;
+    } else {
+        return -1;
+    }
+}
+
+function setSavedTab (id) {
+    console.log("setSavedTab", id);
+
+    localStorage[thisId() + "_default_tab"] = id;
+}
+
+function getTabById (id) {
+    console.log("getTabById", id);
+
+    return $(".yui3-tab").eq(id);
+}
+
+function getIdFromTab (tab) {
+    console.log("getIdFromTab");
+
+    return $(tab).index();
+}
+
+function highlightTab (id) {
+    console.log("highlightTab", id);
+
+    var tab = getTabById(id);
+    setSavedTab(id);
     $(".default_tab").hide();
     tab.find(".default_tab").show();
-    localStorage[thisId() + "_default_tab"] = tab.index();
+    tab.click();
 }
 
 function main () {
     console.log("Initializing default_tab");
 
     addGUI();
-    var tab = $(".yui3-tab").eq(localStorage[thisId() + "_default_tab"]);
-    setTab(tab);
-    tab.click();
+
+    var tab = getSavedTab();
+    if (tab !== -1) {
+        highlightTab(tab);
+    } else {
+        setSavedTab(0);
+    }
 
     $(".yui3-tab").click(function () {
         if (isKeyDown(17)) {
-            setTab(this);
+            highlightTab(getIdFromTab(this));
         }
     });
 
