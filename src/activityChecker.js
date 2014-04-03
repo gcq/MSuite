@@ -128,6 +128,8 @@ function addGUI () {
 }
 
 function clearActivity (activity_node) {
+    activity_node = $(activity_node);
+
     //Traiem el color
     activity_node
     .removeClass("activity_done")
@@ -299,8 +301,17 @@ function main () {
     addCSS();
     addGUI();
     
-    $("#check_button").click(function () {
-        checkAllActivities();
+    $("#check_button").click(function (event) {
+        event.preventDefault();
+
+        if (!isKeyDown(17)) {
+            checkAllActivities();
+        } else {
+            $(".custom_activity").each(function () {
+                clearActivity(this);
+                checked = false;
+            });
+        }
     });
     
     $(".single_check").click(function (event) {
