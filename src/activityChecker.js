@@ -266,10 +266,13 @@ function populateSection (section_node) {
     if (section.hasClass("section_checked")) {
         alert("Ja comprovat! Per tornar a comprovar, recarrega la pàgina");
     } else {
-        section.addClass("section_checked");
-        $.each(section.find(".custom_activity"), function (a, b) {
-            populateActivity(b);
-        });
+        section
+        .addClass("section_checked")
+        .find(".custom_activity")
+            .each(function () {
+                populateActivity(this);
+            })
+        .end();
     }
 }
 
@@ -288,8 +291,8 @@ function checkAllActivities () {
         console.log("checking all activities");
         checked = true;
         
-        $.each($(".custom_activity"), function (a, b) {
-            populateActivity(b);
+        $(".custom_activity").each(function () {
+            populateActivity(this);
         });
     }
 }
