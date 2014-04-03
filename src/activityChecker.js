@@ -71,17 +71,27 @@ function addGUI () {
                     .css("border-radius", "5px")
                     .css("color", "white")
                     .text("Comprovar")
+                    .click(function (event) {
+                        event.preventDefault();
+                        var tab = $(this).closest(".yui3-tab-panel");
+
+                        if (!isKeyDown(17)) {
+                            populateSection(tab);
+                        } else {
+                            tab
+                            .removeClass("section_checked")
+                            .find(".custom_activity")
+                                .each(function () {
+                                    clearActivity($(this));
+                                })
+                            .end();
+                        }
+                    })
                 )
             )
         );
-        
-        //Necessita estar qui, per que quan s'executa main,
-        //aixo encara no existeix.
-        node.find(".tab_check").click(function () {
-            populateSection($(this).closest(".yui3-tab-panel"));
-        });
     });
-    
+
     //Per que el clic a la imatge de la activitat no tingui cap efecte
     $(".single_check").each(function () {
         $(this).prependTo($(this).parent().parent());

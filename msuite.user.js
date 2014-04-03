@@ -83,17 +83,27 @@ function addGUI () {
                     .css("border-radius", "5px")
                     .css("color", "white")
                     .text("Comprovar")
+                    .click(function (event) {
+                        event.preventDefault();
+                        var tab = $(this).closest(".yui3-tab-panel");
+
+                        if (!isKeyDown(17)) {
+                            populateSection(tab);
+                        } else {
+                            tab
+                            .removeClass("section_checked")
+                            .find(".custom_activity")
+                                .each(function () {
+                                    clearActivity($(this));
+                                })
+                            .end();
+                        }
+                    })
                 )
             )
         );
-        
-        //Necessita estar qui, per que quan s'executa main,
-        //aixo encara no existeix.
-        node.find(".tab_check").click(function () {
-            populateSection($(this).closest(".yui3-tab-panel"));
-        });
     });
-    
+
     //Per que el clic a la imatge de la activitat no tingui cap efecte
     $(".single_check").each(function () {
         $(this).prependTo($(this).parent().parent());
@@ -612,23 +622,23 @@ module.exports = main;
 },{"jQuery":11}],6:[function(require,module,exports){
 var $ = require("jQuery");
 
-window.active_keys = [];
+var active_keys = [];
 function main () {
     $(document).keydown(function (event) {
-        if (window.active_keys.indexOf(event.which) === -1) {
-            window.active_keys.push(event.which);
+        if (active_keys.indexOf(event.which) === -1) {
+            active_keys.push(event.which);
         }
     });
 
     $(document).keyup(function (event) {
-        window.active_keys = window.active_keys.filter(function (element) {
+        active_keys = active_keys.filter(function (element) {
             return element !== event.which;
         });
     });
 }
 
 function isKeyDown (key) {
-    return window.active_keys.indexOf(key) !== -1;
+    return active_keys.indexOf(key) !== -1;
 }
 
 module.exports.main = main;
