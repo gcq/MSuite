@@ -9,7 +9,7 @@ Es millor ja que és més ràpid que una comprovació completa, i al servidor li
 
 + La icona de cada tramesa és un botó que comprova una tramesa en concret.
 
-+ Si mantens CNTRL + click a la icona de la tramesa, la neteja. És a dir, treu tots els colors i la info que afegeix l'script.
++ Si mantens CNTRL + click a la icona de la tramesa, el botó de la pestanya, o el botó per comprovar totes es activitats, les neteja. És a dir, treu tots els colors i la info que afegeix l'script.
 
 + A les trameses comprovades, afegeix un botó que mostra els comentaris, si n'hi han, així pots veure el comentari del professor d'una passada.
 
