@@ -843,7 +843,7 @@ function addGUI () {
             .prop("id", "timetable_table")
             .addClass("generaltable")
         )
-        .hide()
+        //.hide()
     );
 
     var table = $("#timetable_table"),
@@ -856,8 +856,7 @@ function addGUI () {
         .css("border", "0px")
         .append(
             $("<span>")
-            .prop("id", "timetable_update_button")
-            .text("Actualitzar")
+            .text("")
         )
     );
     for (dia in horari) {
@@ -904,14 +903,6 @@ function addGUI () {
         
         table.append(row);
     }
-}
-
-function always2 (i) {
-    i = i.toString();
-    if (i.length < 2) {
-        i = "0"+i;
-    }
-    return i;
 }
 
 function updateTable () {
@@ -962,12 +953,6 @@ function main () {
         console.log("clicked timetable");
         
         $("#timetable_container").slideToggle();
-    });
-    
-    $("#timetable_update_button").click(function () {  //Actualitza Horari
-        console.log("clicked update timetable");
-        
-        updateTable();
     });
     
     updateTable();
