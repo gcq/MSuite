@@ -196,11 +196,9 @@ function populateActivity (custom_activity_node) {
                 .prop("src", external_img_src)
             )
             .click(function () {
-                if (!isKeyDown(17)) {
-                    $(window).one("focus", function () {
-                        populateActivity(custom_activity_node);
-                    });
-                }
+                $(window).one("focus", function () {
+                    populateActivity(custom_activity_node);
+                });
             })
         );
     };
@@ -239,6 +237,7 @@ function populateActivity (custom_activity_node) {
                 } else {
                     if (page.find(".overdue").length > 0) {
                         passed();
+                        setQuickInfo("");
                     } else {
                         pending();
                         var remaining = page.find(".lastrow")
