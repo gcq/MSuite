@@ -1,7 +1,7 @@
 import subprocess
 import shutil
 
-__SCRIPT_VERSION__ = "1.0.1"
+__SCRIPT_VERSION__ = "1.0.2"
 
 top = """// ==UserScript==
 // @name        Moodle Suite

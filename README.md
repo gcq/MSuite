@@ -19,6 +19,8 @@ Es millor ja que és més ràpid que una comprovació completa, i al servidor li
 
 + Afegeix un botó al menú superior que desplega un horari configurable.
 
++ Fent CNTRL + click a aquest botó, la pàgina canviarà automàticament a la del curs corresponent per la hora actual.
+
 ###Folders:
 
 + Afegeix un signe `+` davant de cada carpeta, que premet desplegar-la sense obrir una pestanya nova.
