@@ -1,4 +1,5 @@
-var $ = require("jQuery");
+var $ = require("jQuery"),
+    isKeyDown = require("./keys").isKeyDown;
 
 
 // - - - VARIABLES - - - //
@@ -135,7 +136,7 @@ function addGUI () {
             .prop("id", "timetable_table")
             .addClass("generaltable")
         )
-        //.hide()
+        .hide()
     );
 
     var table = $("#timetable_table"),
@@ -244,7 +245,18 @@ function main () {
     $("#timetable_button").click(function () {  //Horari
         console.log("clicked timetable");
         
-        $("#timetable_container").slideToggle();
+        if (!isKeyDown(17)) {
+            $("#timetable_container").slideToggle();
+        } else {
+            var href = $(".current_class")
+                       .first()
+                       .find("a")
+                       .prop("href");
+
+            if (href !== undefined) {
+                window.location.href = href;
+            }
+        }
     });
     
     updateTable();
